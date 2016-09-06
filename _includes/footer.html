@@ -1,0 +1,21 @@
+<footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        Latest version: {{ site.pustefix_version }}
+      </div>
+
+      <div style="color:white" class="footer-col footer-col-2">
+          {% if site.github_username %}
+            {% include icon-github.html username=site.github_username %}
+          {% endif %}
+      </div>
+
+      <div class="footer-col footer-col-3">
+        Last published: {{ site.time | date_to_string }}
+      </div>
+    </div>
+  </div>
+
+</footer>

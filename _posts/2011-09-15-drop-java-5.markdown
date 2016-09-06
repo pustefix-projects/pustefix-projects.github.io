@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "Pustefix ready for Java SE 7 and dropping support for Java 1.5"
+date:   2011-09-15 15:59:00:00 +0200
+categories: pustefix
+---
+Starting with version 0.18 Pustefix will no longer officially support Java SE 1.5 or older (nearly 5 years public availability of Java SE 1.6 should have been enough time for upgrading existing applications).
+
+One reason for dropping support is the proprietary annotation processing in 1.5 (Sun's deprecated apt tool) and the new standardized way in 1.6 (JSR269 Pluggable Annotation Processing API and JSR199 Java Compiler API), which will replace the apt tool in upcoming Pustefix releases.
+
+Switching to the new annotation processing standard Pustefix now is also ready for upcoming Java releases. In general Java SE 7 can be already used with older Pustefix versions. I have only encountered a problem with Pustefix's JAXWS/AJAX services, which will be fixed in the next 0.18 release (whereas it's recommended to use the lightweight JSON services instead anyway).
+ 
+If you still want to use JAXWS/AJAX services with older Pustefix versions and Java 1.7, you will have to upgrade to a newer JAXWS version, because the used JAXWS version stumbles accross the new getSuppressed() property in java.lang.Throwable when generating Exception beans. Additionally you will have to adapt the tools.jar Maven dependency because the java.vendor property used to activate the dependency profile changed from "Sun Microsystems Inc." to "Oracle Corporation".

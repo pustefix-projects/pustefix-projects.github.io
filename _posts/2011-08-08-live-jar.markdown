@@ -1,0 +1,23 @@
+---
+layout: post
+title:  "Using the Live-JAR mechanism with mvn tomcat:run-war"
+date:   2011-08-08 16:30:00 +0200
+categories: pustefix
+---
+If you're running a modularized Pustefix application using `mvn tomcat:run-war`, you can enable the Live-JAR mechanism to load resources from the module/Maven projects' source folder instead of the JAR files from the classpath.
+
+Thus you don't have to rebuild your modules when you modify a resource. Modified static resources and view parts (XML, XSLT) are automatically reloaded by Pustefix, modified configuration files (Pustefix, Spring) only will require a Webapp reload or Tomcat restart (but no build).
+
+Since Pustefix 0.16 the most simple way to enable the Live-JAR mechanism is by specifying the `pustefix.liveroot` system property. Its value is the root directory where Pustefix will look for the backing Maven projects. Pustefix will also search sub directories, but for performance reasons the default depth is limited to 4 (it can be changed using the `pustefix.liveroot.maxdepth` property).
+
+Here's the example commandline for a Maven multi project with a webapp subproject from which you start Tomcat, whereas the other subprojects are found by using the main project as root using the relative path `..`:
+
+{% highlight bash %}
+[/tmp/mainproject/webapp]$ mvn tomcat:run-war -Dpustefix.liveroot=..
+{% endhighlight %}
+
+Alternatively you can specify an absolute path:
+
+{% highlight bash %}
+[/tmp/mainproject/webapp]$ mvn tomcat:run-war -Dpustefix.liveroot=/tmp/mainproject
+{% endhighlight %}
