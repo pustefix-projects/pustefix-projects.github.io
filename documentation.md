@@ -16,10 +16,10 @@ navi: 2
         tag library, including all you have to know from beginner to expert level.
       </p>
       <div>
-        <a href="">Pustefix Reference Documentation - Version 0.20.x</a>
+        <a href="/documentation/0.20.x/reference.html">Pustefix Reference Documentation - Version 0.20.x</a>
       </div>
       <div>
-        <a href="">Pustefix Reference Documentation - Version 0.19.x</a>
+        <a href="/documentation/0.19.x/reference.html">Pustefix Reference Documentation - Version 0.19.x</a>
       </div>
     </div>
     <div style="padding-top: 20px;">
@@ -30,10 +30,10 @@ navi: 2
         and run some basic applications within minutes.
       </p>
       <div>
-        <a href="">Pustefix Tutorial - Version 0.20.x</a>
+        <a href="/documentation/0.20.x/tutorial.html">Pustefix Tutorial - Version 0.20.x</a>
       </div>
       <div>
-        <a href="">Pustefix Tutorial - Version 0.19.x</a>
+        <a href="/documentation/0.19.x/tutorial.html">Pustefix Tutorial - Version 0.19.x</a>
       </div>
     </div>
   </div>
