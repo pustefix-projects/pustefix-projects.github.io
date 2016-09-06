@@ -1,0 +1,41 @@
+8
+
+dir
+4887
+https://pustefix.svn.sourceforge.net/svnroot/pustefix/trunk/website/docroot/schema/jndi
+https://pustefix.svn.sourceforge.net/svnroot/pustefix
+
+
+
+2009-10-02T16:17:26.802649Z
+4887
+smarsching
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+cb817f18-9a0d-0410-9399-b6878cfc1083
+
+pustefix-jndi-1.0.xsd
+file
+
+
+
+
+2009-10-02T16:28:05.379338Z
+39d88d04ae31a5f9a95ec06fc81d3382
+2009-10-02T16:17:26.802649Z
+4887
+smarsching
+has-props
+
