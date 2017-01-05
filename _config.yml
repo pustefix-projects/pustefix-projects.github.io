@@ -7,12 +7,12 @@
 
 # Site settings
 title: Pustefix Framework 
-email: your-email@domain.com
+email: mtld@gmx.de
 description: > # this means to ignore newlines until "baseurl:"
   The Pustefix Framework is an open-source Java web application framework for
   developing request-based MVC-style web applications using Spring, XML and XSLT.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+url: "http://www.pustefix-framework.org" # the base hostname & protocol for your site
 github_username: pustefix-projects/pustefix-framework 
 
 paginate: 5
