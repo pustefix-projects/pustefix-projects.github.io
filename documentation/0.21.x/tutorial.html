@@ -1,0 +1,1208 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Pustefix Framework Tutorial</title><link rel="stylesheet" type="text/css" href="css/style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book"><div class="titlepage"><div><div><h1 class="title"><a name="tutorial"></a>Pustefix Framework Tutorial</h1></div><div><h2 class="subtitle">Version 0.21.x</h2></div><div><p class="releaseinfo">This documentation relates to the latest Pustefix release from the 0.21 line.</p></div><div><p class="copyright">Copyright &copy; 2007-2017 </p></div><div><div class="legalnotice"><a name="d0e12"></a><p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="preface"><a href="#introduction">Introduction</a></span></dt><dt><span class="chapter"><a href="#gettingstarted">1. Getting started</a></span></dt><dd><dl><dt><span class="section"><a href="#gettingstarted.requirements">1.1. Requirements</a></span></dt><dt><span class="section"><a href="#gettingstarted.mavenarchetypes">1.2. Generating a new project from a Maven archetype</a></span></dt><dt><span class="section"><a href="#gettingstarted.getsources">1.3. Getting the source code</a></span></dt></dl></dd><dt><span class="chapter"><a href="#wrapper-handler">2. Basic tutorial</a></span></dt><dd><dl><dt><span class="section"><a href="#wrapper-handler.setup">2.1. Setting up a new project</a></span></dt><dt><span class="section"><a href="#wrapper-handler.structure">2.2. Generated files</a></span></dt><dt><span class="section"><a href="#wrapper-handler.pages">2.3. Creating the pages</a></span></dt><dt><span class="section"><a href="#wrapper-handler.entrypage">2.4. Setting the entry page</a></span></dt><dt><span class="section"><a href="#wrapper-handler.inputform">2.5. Create the input form</a></span></dt><dt><span class="section"><a href="#wrapper-handler.business-logic">2.6. Implementing the business logic</a></span></dt><dd><dl><dt><span class="section"><a href="#wrapper-handler.business-logic.wrapper">2.6.1. Implementing a wrapper</a></span></dt><dt><span class="section"><a href="#wrapper-handler.business-logic.bean">2.6.2. Implementing a bean</a></span></dt><dt><span class="section"><a href="#wrapper-handler.business-logic.handler">2.6.3. Implementing a handler</a></span></dt></dl></dd><dt><span class="section"><a href="#wrapper-handler.pageflow">2.7. Implementing the workflow</a></span></dt><dt><span class="section"><a href="#wrapper-handler.errors">2.8. Displaying errors</a></span></dt><dt><span class="section"><a href="#wrapper-handler.domtree">2.9. Displaying the entered data</a></span></dt><dt><span class="section"><a href="#wrapper-handler.save">2.10. Saving the data</a></span></dt><dt><span class="section"><a href="#wrapper-handler.tweaks">2.11. The finishing touch</a></span></dt><dd><dl><dt><span class="section"><a href="#wrapper-handler.tweaks.retrieve">2.11.1. Changing data</a></span></dt><dt><span class="section"><a href="#wrapper-handler.tweaks.needsdata">2.11.2. Avoiding unwanted access</a></span></dt></dl></dd><dt><span class="section"><a href="#wrapper-handler.conclusion">2.12. Conclusion</a></span></dt></dl></dd><dt><span class="chapter"><a href="#ajax-calculator">3. AJAX Calculator tutorial</a></span></dt><dd><dl><dt><span class="section"><a href="#ajax-calculator.setup">3.1. Setup</a></span></dt><dt><span class="section"><a href="#ajax-calculator.businesslogic">3.2. Implementing the business logic</a></span></dt><dt><span class="section"><a href="#ajax-calculator.expose">3.3. Exposing the service</a></span></dt><dt><span class="section"><a href="#ajax-calculator.consume">3.4. Consuming the service</a></span></dt><dt><span class="section"><a href="#ajax-calculator.conclusion">3.5. Conclusion</a></span></dt></dl></dd></dl></div><div class="list-of-figures"><p><b>List of Figures</b></p><dl><dt>2.1. <a href="#wrapper-handler.first-app">The new Pustefix project</a></dt></dl></div><div class="preface"><div class="titlepage"><div><div><h1 class="title"><a name="introduction"></a>Introduction</h1></div></div></div><p>
+    These tutorials are meant as a starting point for developers that have never worked with Pustefix.
+    They introduce you to the different types of applications that can be implemented with Pustefix.
+    Of course, they can only scratch at the surface of most of the features, if you are interested in 
+    an in-depth look at Pustefix, refer to the reference documentation. 
+  </p><p>
+    You can either work through the tutorial by following the instructions and create the applications 
+    from scratch (the preferred way for first-time Pustefix users) or you can just check out the complete
+    source code (see  <a class="xref" href="#gettingstarted.getsources" title="1.3.&nbsp;Getting the source code">Section&nbsp;1.3, &#8220;Getting the source code&#8221;</a>).
+  </p><p></p></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="gettingstarted"></a>Chapter&nbsp;1.&nbsp;Getting started</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#gettingstarted.requirements">1.1. Requirements</a></span></dt><dt><span class="section"><a href="#gettingstarted.mavenarchetypes">1.2. Generating a new project from a Maven archetype</a></span></dt><dt><span class="section"><a href="#gettingstarted.getsources">1.3. Getting the source code</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="gettingstarted.requirements"></a>1.1.&nbsp;Requirements</h2></div></div></div><p>
+     Before we can get started, you have to make sure that some requirements
+     are met by your development environment. You will need:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+        JDK 8 or higher
+      </li><li class="listitem">
+        POSIX-like operating system (Pustefix has been tested with Linux
+        and Mac OS X, but might also work with other systems like *BSD)
+      </li><li class="listitem">
+        Apache Maven 3 or higher
+      </li></ul></div><p>
+      The installation of these tools is not covered by this
+      tutorial. Please refer to the documentation provided with these tools
+      for installation instructions.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="gettingstarted.mavenarchetypes"></a>1.2.&nbsp;Generating a new project from a Maven archetype</h2></div></div></div><p>
+      Pustefix provides some Maven archetypes for quickly creating new applications.
+      A good starting point is the basic application archetype.
+      Just call <code class="literal">mvn archetype:generate</code>
+      and select the archetype <code class="literal">org.pustefixframework:pustefix-archetype-basic</code>:
+    </p><pre class="screen">$ mvn archetype:generate -Dfilter=pustefix</pre><p>
+      After choosing the <code class="literal">pustefix-archetype-basic</code> Maven will ask you for your project's <code class="literal">groupId</code>, 
+      <code class="literal">artifactId</code>, <code class="literal">version</code> and <code class="literal">package</code>.
+      Having finished these settings Maven will generate the new project within a new directory called like the <code class="literal">artifactId</code>
+      and located within the current working directory (default is <code class="literal">myapp</code>).
+    </p><pre class="screen">$ cd myapp
+$ mvn tomcat7:run-war</pre><p>
+      The generated project is a standard Maven project with <code class="literal">war</code> packaging type, i.e. you can immediately build and
+      run your application, e.g. using Tomcat by calling <code class="literal">mvn tomcat7:run-war</code> and
+      opening <code class="literal">http://localhost:8080</code> in your browser.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="gettingstarted.getsources"></a>1.3.&nbsp;Getting the source code</h2></div></div></div><p>
+    The source code used in the tutorials is available for public checkout. To test the tutorials on
+    your local development machine, execute the following commands:
+  </p><pre class="screen">$ git clone https://github.com/pustefix-projects/pustefix-framework.git pustefix
+$ cd pustefix
+$ git checkout -b tutorial `git tag -l "pustefixframework-*" --sort v:refname | tail -1`
+$ cd pustefix-tutorial/first-app
+$ mvn tomcat7:run-war</pre><p></p><p>
+    This will clone the Pustefix Git repository, checkout/branch the latest Pustefix release tag, and run the tutorial application. 
+  </p><p></p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="wrapper-handler"></a>Chapter&nbsp;2.&nbsp;Basic tutorial</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#wrapper-handler.setup">2.1. Setting up a new project</a></span></dt><dt><span class="section"><a href="#wrapper-handler.structure">2.2. Generated files</a></span></dt><dt><span class="section"><a href="#wrapper-handler.pages">2.3. Creating the pages</a></span></dt><dt><span class="section"><a href="#wrapper-handler.entrypage">2.4. Setting the entry page</a></span></dt><dt><span class="section"><a href="#wrapper-handler.inputform">2.5. Create the input form</a></span></dt><dt><span class="section"><a href="#wrapper-handler.business-logic">2.6. Implementing the business logic</a></span></dt><dd><dl><dt><span class="section"><a href="#wrapper-handler.business-logic.wrapper">2.6.1. Implementing a wrapper</a></span></dt><dt><span class="section"><a href="#wrapper-handler.business-logic.bean">2.6.2. Implementing a bean</a></span></dt><dt><span class="section"><a href="#wrapper-handler.business-logic.handler">2.6.3. Implementing a handler</a></span></dt></dl></dd><dt><span class="section"><a href="#wrapper-handler.pageflow">2.7. Implementing the workflow</a></span></dt><dt><span class="section"><a href="#wrapper-handler.errors">2.8. Displaying errors</a></span></dt><dt><span class="section"><a href="#wrapper-handler.domtree">2.9. Displaying the entered data</a></span></dt><dt><span class="section"><a href="#wrapper-handler.save">2.10. Saving the data</a></span></dt><dt><span class="section"><a href="#wrapper-handler.tweaks">2.11. The finishing touch</a></span></dt><dd><dl><dt><span class="section"><a href="#wrapper-handler.tweaks.retrieve">2.11.1. Changing data</a></span></dt><dt><span class="section"><a href="#wrapper-handler.tweaks.needsdata">2.11.2. Avoiding unwanted access</a></span></dt></dl></dd><dt><span class="section"><a href="#wrapper-handler.conclusion">2.12. Conclusion</a></span></dt></dl></div><p>
+    In this tutorial, you will learn how to work with the basic features provided by the Pustefix framework.
+    You will accept user input, store it in the session and display it back to the user.
+    Furthermore, you will create a very simple workflow containing three pages.  
+  </p><p>
+    The requirements for your application are:
+  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+        Provide an HTML form that can be used to register new users. The data for a new user must contain:
+        gender, name, email-address, homepage, date of birth and a flag to mark the user as an administrator.
+      </p></li><li class="listitem"><p>
+        Validate the user data after the page has been submitted and display error information.
+      </p></li><li class="listitem"><p>
+        If the entered data is correct, move to a new page, which displays the user data and allows the
+        user to choose whether he wants to go back and modify the data or accept the data.
+      </p></li><li class="listitem"><p>
+        After the data has been stored, display a confirmation page to the user.
+      </p></li></ol></div><p>
+    In this tutorial application, you will focus on how the requirements will be implemented in
+    the Pustefix framework. There will be no real business logic like actually storing the
+    user data in any data base. These tasks are left to your favorite ORM framework.
+  </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.setup"></a>2.1.&nbsp;Setting up a new project</h2></div></div></div><p>
+      Before you can start developing the application, make sure that your system
+      fulfills all requirements that are mentioned in <a class="xref" href="#gettingstarted.requirements" title="1.1.&nbsp;Requirements">Section&nbsp;1.1, &#8220;Requirements&#8221;</a>.
+    </p><p>
+      If your environment is set up correctly, you may create a new Pustefix project. For this
+      tutorial, please name the project <span class="emphasis"><em>firstapp</em></span>. A new Pustefix project
+      can be created using a Maven archetype as described in <a class="xref" href="#gettingstarted.mavenarchetypes" title="1.2.&nbsp;Generating a new project from a Maven archetype">Section&nbsp;1.2, &#8220;Generating a new project from a Maven archetype&#8221;</a>.
+      The project name corresponds to the artifactId, so you should enter <span class="emphasis"><em>firstapp</em></span> when
+      you're asked by Maven. You should further choose <span class="emphasis"><em>org.pustefixframework.tutorial</em></span> as
+      groupId and <span class="emphasis"><em>org.pustefixframework.tutorial.firstapp</em></span> as package name
+      (you can choose other names, but you will have to replace the recommended names wherever used in this tutorial).
+    </p><p>
+      After Maven successfully created the new project, you can start it using <code class="literal">mvn tomcat7:run-war</code>
+      and open it in your browser under <code class="uri">http://localhost:8080</code>.
+      Figure <a class="xref" href="#wrapper-handler.first-app" title="Figure&nbsp;2.1.&nbsp;The new Pustefix project">Figure&nbsp;2.1, &#8220;The new Pustefix project&#8221;</a> shows the output of the new Pustefix project.
+    </p><div class="figure"><a name="wrapper-handler.first-app"></a><p class="title"><b>Figure&nbsp;2.1.&nbsp;The new Pustefix project</b></p><div class="figure-contents"><div class="mediaobject"><img src="images/tutorial/first-app.png" alt="The new Pustefix project"></div></div></div><br class="figure-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.structure"></a>2.2.&nbsp;Generated files</h2></div></div></div><p>
+      Maven generated a working application for you. All relevant files have been put
+      into the <code class="filename">firstapp</code> folder within your working directory. Please take a look at the most important folders:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          The <code class="filename">src/main/webapp/WEB-INF</code> folder contains all configuration files for your applications. These are:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+              <code class="filename">project.xml</code> contains general project information, framework configuration, e.g. for the
+              rendering system, exception processing, path mappings for static resources, etc.
+            </p></li><li class="listitem"><p>
+              <code class="filename">app.xml</code> contains the configuration concerning the Java part of the application, e.g. pagerequests and assigned Java
+              framework classes
+            </p></li><li class="listitem"><p>
+              <code class="filename">depend.xml</code> contains the configuration concerning the XML/XSLT part of the application, e.g. pages and XSL stylesheets used in
+              your project.
+            </p></li><li class="listitem"><p>
+              <code class="filename">web.xml</code> contains servlet configuration and mappings.
+            </p></li><li class="listitem"><p>
+              <code class="filename">spring.xml</code> is empty by default and can be used to configure your Spring beans.
+            </p></li><li class="listitem"><p>
+              <code class="filename">pfixlog.xml</code> contains the log4j configuration.
+            </p></li></ul></div></li><li class="listitem"><p>
+            The <code class="filename">src/main/webapp</code> folder also contains resource folders. These are:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+          The <code class="filename">css</code> and <code class="filename">img</code> folders contain
+          CSS files and images which should be delivered as static resources.
+        </p></li><li class="listitem"><p>
+          The <code class="filename">txt</code> folder contains the web pages, i.e. the according XML content and fragments.
+        </p></li><li class="listitem"><p>
+          The <code class="filename">xml</code> folder contains the different frames of your application. A frame is an
+          XML document which will be used for every page that is generated. This way, you can easily share
+          header, footer and navigation between all pages.
+        </p></li><li class="listitem"><p>
+          The <code class="filename">xsl</code> folder contains XSL stylesheets that are only used in your application
+          (not including XSL stylesheets provided by Pustefix itself).
+        </p></li></ul></div></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.pages"></a>2.3.&nbsp;Creating the pages</h2></div></div></div><p>
+      Start implementing your application by adding the three needed pages to the application:
+      <code class="literal">EnterData</code>, <code class="literal">ReviewData</code> and <code class="literal">Confirm</code>.
+    </p><p>
+      New pages are added by editing the <code class="filename">src/main/webapp/WEB-INF/depend.xml</code> file. For each page, you
+      have to add an XML element defining which layout XML file should be used (the common base layout of the pages).
+    </p><p>
+      You can just remove or alter the according tags for the predefined pages. The new configuration should look like this:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;make</span> <span class="hl-attribute">lang</span>=<span class="hl-value">"en_GB"</span> <span class="hl-attribute">project</span>=<span class="hl-value">"firstapp"</span><span class="hl-tag">&gt;</span>
+
+  <em class="hl-comment" style="color: silver">&lt;!--
+    Additional stuff, like configuration of namespaces and XSL transformation levels.
+  --&gt;</em>
+  
+  <span class="hl-tag">&lt;standardpage</span> <span class="hl-attribute">name</span>=<span class="hl-value">"EnterData"</span> <span class="hl-attribute">xml</span>=<span class="hl-value">"xml/frame.xml"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;standardpage</span> <span class="hl-attribute">name</span>=<span class="hl-value">"ReviewData"</span> <span class="hl-attribute">xml</span>=<span class="hl-value">"xml/frame.xml"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;standardpage</span> <span class="hl-attribute">name</span>=<span class="hl-value">"Confirm"</span> <span class="hl-attribute">xml</span>=<span class="hl-value">"xml/frame.xml"</span><span class="hl-tag">/&gt;</span>
+  
+<span class="hl-tag">&lt;/make&gt;</span></pre><p>
+      You can now open the <code class="literal">EnterData</code> page by browsing to <code class="uri">http://localhost:8080/EnterData</code>.
+    </p><p>
+      As you did not provide any content for this page, Pustefix will display an error icon. When hovering
+      over this icon, you can see, that the content of the page in the file <code class="filename">txt/pages/EnterData.xml</code>
+      is missing.
+    </p><p>
+      This problem can easily be solved by adding the file <code class="filename">src/main/webapp/txt/pages/EnterData.xml</code>:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span> <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;h1&gt;</span>Register new user<span class="hl-tag">&lt;/h1&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+<span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      If you reload the page, you will see the <code class="literal">Register new user</code> headline. Now repeat this 
+      step for all three pages (you can remove/alter the predefined pages which are no longer used).
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.entrypage"></a>2.4.&nbsp;Setting the entry page</h2></div></div></div><p>
+      If you open the application in your browser without specifying the page directly, Pustefix will
+      try to display the page <code class="literal">Home</code>, which is the default page generated by the Maven archetype (you will get
+      an error message, if you already removed the page in the previous step). Desired behaviour would
+      be, that the <code class="literal">EnterData</code> page is displayed, when your application is started.
+      This can be changed in the configuration in <code class="filename">src/main/webapp/WEB-INF/app.xml</code>:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;context-xml-service-config&gt;</span>
+  
+  <span class="hl-tag">&lt;global-config /&gt;</span>
+
+  <span class="hl-tag">&lt;context</span> <span class="hl-attribute">defaultpage</span>=<span class="hl-value">"EnterData"</span><span class="hl-tag">&gt;</span>
+    ...
+  <span class="hl-tag">&lt;/context&gt;</span>
+
+  ...
+
+<span class="hl-tag">&lt;/context-xml-service-config&gt;</span></pre><p>
+      The entry page is specified using the <code class="literal">defaultpage</code> attribute of the
+      <code class="literal">&lt;context/&gt;</code> tag. After you set this attribute to <code class="literal">EnterData</code>
+      open the URL <code class="uri">http://localhost:8080</code> in your browser and 
+      you will see that the content of <code class="literal">EnterData</code> appears.
+    </p><p>
+      After you changed the entry page, you can get completely rid of the generated/predefined pages by
+      following these steps (if not already done before):
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+          Delete the XML files for the predefined pages from the <code class="filename">src/main/webapp/txt/pages</code> folder.
+        </p></li><li class="listitem"><p>
+          Remove the <code class="literal">&lt;pagerequest/&gt;</code> and <code class="literal">&lt;pageflow&gt;</code> tags
+          for the predefined pages from the <code class="filename">src/main/webapp/WEB-INF/app.xml</code> file.
+        </p></li><li class="listitem"><p>
+          Remove the <code class="literal">&lt;standardpage/&gt;</code> tags for the
+          predefined pages from the <code class="filename">src/main/webapp/WEB-INF/depend.xml</code> file.
+        </p></li></ol></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.inputform"></a>2.5.&nbsp;Create the input form</h2></div></div></div><p>
+      Next, you have to create the HTML form to accept the data of a new user. To create the form, you should
+      not use the standard HTML tags, but the replacements by Pustefix, which automatically write back the data
+      from the business logic to the HTML page.
+    </p><p>
+      The form has to be added to <code class="filename">txt/pages/EnterData.xml</code>:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span>
+               <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+
+      <span class="hl-tag">&lt;h1&gt;</span>Register new user<span class="hl-tag">&lt;/h1&gt;</span>
+
+      <span class="hl-tag">&lt;pfx:forminput&gt;</span>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Gender:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"select"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.sex"</span><span class="hl-tag">&gt;</span>
+            <span class="hl-tag">&lt;pfx:option</span> <span class="hl-attribute">value</span>=<span class="hl-value">"m"</span><span class="hl-tag">&gt;</span>male<span class="hl-tag">&lt;/pfx:option&gt;</span>
+            <span class="hl-tag">&lt;pfx:option</span> <span class="hl-attribute">value</span>=<span class="hl-value">"f"</span><span class="hl-tag">&gt;</span>female<span class="hl-tag">&lt;/pfx:option&gt;</span>
+          <span class="hl-tag">&lt;/pfx:xinp&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Name:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.name"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Email:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.email"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Homepage:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.homepage"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Birthday:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.birthday"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Administrator:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"check"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.admin"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"true"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"submit"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Register"</span><span class="hl-tag">/&gt;</span>
+
+      <span class="hl-tag">&lt;/pfx:forminput&gt;</span>
+
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+ <span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      See the Pustefix reference documentation for more information about the XML tags that have been used in
+      this page.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.business-logic"></a>2.6.&nbsp;Implementing the business logic</h2></div></div></div><p>
+      Now that you have finished most of the HTML frontend, you should start implementing the business logic.
+      The business logic in Pustefix applications mostly consists of three parts:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          A <code class="literal">wrapper</code> is used to extract the user input from the HTTP-request, executes
+          some checks and casts the data to the desired Java types. A <code class="literal">wrapper</code> is also used
+          to write the values and/or error information back to the response. It connects your HTML frontend
+          with your application logic. 
+        </p></li><li class="listitem"><p>
+          A <code class="literal">handler</code> processes the HTTP request. It extracts the user input from the <code class="literal">wrapper</code>,
+          executes additional information and does whatever is necessary in the specific application. You have all the power
+          provided by Java at your command when implementing a <code class="literal">handler</code>.
+        </p><p>
+          A handler does not have direct access to the HTTP request, HTTP session or HTTP response.
+        </p></li><li class="listitem"><p>
+          A Spring managed bean having session scope to store the data in the current session (also historically referred to as <code class="literal">ContextResource</code>).
+        </p><p>
+          It provides the data model for a page, which will be made available to the frontend in XML form,
+          either by automatically deserializing it to XML or let it programmatically create XML by itself.
+        </p></li></ul></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="wrapper-handler.business-logic.wrapper"></a>2.6.1.&nbsp;Implementing a wrapper</h3></div></div></div><p>
+        When implementing the business logic you will always start by implementing a wrapper.
+        Wrappers in Pustefix usually are implemented using XML, which will then be used to generate a Java class for the
+        wrapper. Alternatively Wrappers can be defined using annotated Java beans (see the reference documentation). 
+      </p><p>
+        Before you can implement a new wrapper, you will have to create a new Java package <code class="literal">org.pustefixframework.tutorial.firstapp.wrapper</code>
+        which will then contain the new wrapper (if you started with the Maven archetype, the package should already exist). After the package has been created, create a new <code class="filename">EnterUserDataWrapper.iwrp</code> file for the wrapper
+        and paste the following content into this new file:
+      </p><pre class="programlisting"><span class="hl-tag">&lt;interface</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"http://www.pustefix-framework.org/2008/namespace/iwrapper"</span>
+           <span class="hl-attribute">xmlns:xsi</span>=<span class="hl-value">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="hl-attribute">xsi:schemaLocation</span>=<span class="hl-value">"http://www.pustefix-framework.org/2008/namespace/iwrapper 
+                               http://www.pustefix-framework.org/2008/namespace/iwrapper.xsd"</span><span class="hl-tag">&gt;</span>
+  
+  <em class="hl-comment" style="color: silver">&lt;!-- This handler will process the data --&gt;</em>
+  <span class="hl-tag">&lt;ihandler</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.handler.EnterUserDataHandler"</span><span class="hl-tag">/&gt;</span>
+  
+  <em class="hl-comment" style="color: silver">&lt;!-- Parameters that have to be extracted from the request --&gt;</em>
+  <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"sex"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"java.lang.String"</span> <span class="hl-attribute">occurrence</span>=<span class="hl-value">"mandatory"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"name"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"java.lang.String"</span> <span class="hl-attribute">occurrence</span>=<span class="hl-value">"mandatory"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"email"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"java.lang.String"</span> <span class="hl-attribute">occurrence</span>=<span class="hl-value">"mandatory"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"homepage"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"java.lang.String"</span> <span class="hl-attribute">occurrence</span>=<span class="hl-value">"optional"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"birthday"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"java.lang.String"</span> <span class="hl-attribute">occurrence</span>=<span class="hl-value">"optional"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"admin"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"java.lang.Boolean"</span> <span class="hl-attribute">occurrence</span>=<span class="hl-value">"optional"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;default&gt;</span>
+      <span class="hl-tag">&lt;value&gt;</span>false<span class="hl-tag">&lt;/value&gt;</span>
+    <span class="hl-tag">&lt;/default&gt;</span>
+    <span class="hl-tag">&lt;caster</span> <span class="hl-attribute">class</span>=<span class="hl-value">"de.schlund.pfixcore.generator.casters.ToBoolean"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;/param&gt;</span>
+<span class="hl-tag">&lt;/interface&gt;</span></pre><p>
+        The wrapper defines various options:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            Using the <code class="literal">&lt;ihandler/&gt;</code> tag, you define the name of the class that will do
+            the request processing for this handler. This class will be implemented at a later point (see
+            <a class="xref" href="#wrapper-handler.business-logic.handler" title="2.6.3.&nbsp;Implementing a handler">Section&nbsp;2.6.3, &#8220;Implementing a handler&#8221;</a> if you are too curious).
+          </p></li><li class="listitem"><p>
+            The different <code class="literal">&lt;param/&gt;</code> tags are used to define the different parameters that
+            should be extracted from the HTTP request. For each parameter you define the name and the type of the data.
+            All parameters except the admin-flag are String parameters, the admin-flag should be casted to a <code class="literal">boolean</code>
+            value. This can be achieved by setting the <code class="literal">type</code> attribute to <code class="literal">java.lang.Boolean</code>
+            and supplying a <code class="literal">&lt;caster/&gt;</code> tag that specifies a class to to the conversion for
+            you. The class <code class="literal">de.schlund.pfixcore.generator.casters.ToBoolean</code> is provided by the 
+            Pustefix framework.
+          </p><p>
+            For each parameter you may also specify a default value and define whether the parameter is mandatory or
+            not. For more information on the differen <code class="literal">wrapper</code> features, please refer to the 
+            reference documentation.
+          </p></li></ol></div><p>
+        After you created the <code class="literal">iwrp</code> definition, please run <span class="command"><strong>mvn generate-sources</strong></span> to
+        generate the Java class for this wrapper:
+      </p><pre class="screen">$ mvn generate-sources
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Pustefix Basic Application
+[INFO]    task-segment: [generate-sources]
+[INFO] ------------------------------------------------------------------------
+...
+[INFO] [pustefix-iwrapper:generate {execution: default}]
+[INFO] Generated 1 IWrapper class
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+...
+</pre><p>
+        After <code class="literal">Maven</code> has finished the build, you will find a new class
+        <code class="literal">org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper</code> in the
+        <code class="filename">target/generated-sources/iwrapper</code> folder of your installation.
+        This file contains all information needed to extract the parameters from the request.
+      </p><p>
+        If you refresh your IDE or compile you will get an error because the generated class references an IHandler
+        class which doesn't exist and will be created later in this tutorial.
+      </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="wrapper-handler.business-logic.wrapper.conf"></a>Assigning the wrapper to the page</h4></div></div></div><p>
+          Now that you have implemented the HTML page and the wrapper you have to connect the HTML form with
+          the wrapper. This is done using the <code class="filename">app.xml</code> configuration. If a page
+          contains business logic that must be executed, you have to add a <code class="literal">&lt;pagerequest/&gt;</code>
+          tag for it.
+        </p><p>
+         Place an <code class="literal">&lt;input/&gt;</code> tag inside the <code class="literal">&lt;pagerequest/&gt;</code> tag which
+         will act as a container for all wrappers on this page.
+         Each wrapper is registered using an <code class="literal">&lt;wrapper/&gt;</code> tag which requires two parameters
+         to be set:
+        </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+              <code class="literal">class</code> specifies the classname of the wrapper.
+            </p></li><li class="listitem"><p>
+              <code class="literal">prefix</code> specifies the prefix of all request parameters that this wrapper should
+              pay attention to. If you take a look the the HTML page (<a class="xref" href="#wrapper-handler.inputform" title="2.5.&nbsp;Create the input form">Section&nbsp;2.5, &#8220;Create the input form&#8221;</a>)
+              you will see, that all input fields are prefixed with <code class="literal">user</code> and a dot. This way,
+              you can have two wrappers that share parameter names, but will not conflict, as the parameters reside
+              in different namespaces. 
+            </p></li></ol></div><p>
+          To add your new wrapper to the <code class="literal">EnterData</code> page, add these lines to the configuration:
+        </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;context-xml-service-config&gt;</span>
+  
+  <em class="hl-comment" style="color: silver">&lt;!-- ... --&gt;</em>
+
+  <span class="hl-tag">&lt;pagerequest</span> <span class="hl-attribute">name</span>=<span class="hl-value">"EnterData"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;input&gt;</span>
+      <span class="hl-tag">&lt;wrapper</span> <span class="hl-attribute">prefix</span>=<span class="hl-value">"user"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper"</span><span class="hl-tag"> /&gt;</span>
+    <span class="hl-tag">&lt;/input&gt;</span>
+  <span class="hl-tag">&lt;/pagerequest&gt;</span>
+
+<span class="hl-tag">&lt;/context-xml-service-config&gt;</span></pre><p>
+          The next step will be implementing a handler processing the wrapped data.
+          But before you can go on and
+          implement the handler, there is a small task left. Up to now, you do not have a Java type that is able to
+          store the data for a user. This will be done in your next step.
+        </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="wrapper-handler.business-logic.bean"></a>2.6.2.&nbsp;Implementing a bean</h3></div></div></div><p>
+        As you need to store the data submitted by the user, you will need a bean, that is able to store
+        all the information. The following class is a very simple implementation, in your applications 
+        you might already have these beans or use a framework, that is generating them for you.
+      </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> User {
+    <span class="hl-keyword">private</span> String name;
+    <span class="hl-keyword">private</span> String email;
+    <span class="hl-keyword">private</span> String birthday;
+    <span class="hl-keyword">private</span> <span class="hl-keyword">boolean</span> admin;
+    <span class="hl-keyword">private</span> String homepage;
+    <span class="hl-keyword">private</span> String sex;
+
+    <span class="hl-keyword">public</span> String getName() {
+        <span class="hl-keyword">return</span> name;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setName(String name) {
+        <span class="hl-keyword">this</span>.name = name;
+    }
+
+    <span class="hl-keyword">public</span> String getEmail() {
+        <span class="hl-keyword">return</span> email;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setEmail(String email) {
+        <span class="hl-keyword">this</span>.email = email;
+    }
+
+    <span class="hl-keyword">public</span> String getBirthday() {
+        <span class="hl-keyword">return</span> birthday;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setBirthday(String birthday) {
+        <span class="hl-keyword">this</span>.birthday = birthday;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> getAdmin() {
+        <span class="hl-keyword">return</span> admin;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setAdmin(<span class="hl-keyword">boolean</span> admin) {
+        <span class="hl-keyword">this</span>.admin = admin;
+    }
+
+    <span class="hl-keyword">public</span> String getHomepage() {
+        <span class="hl-keyword">return</span> homepage;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setHomepage(String homepage) {
+        <span class="hl-keyword">this</span>.homepage = homepage;
+    }
+
+    <span class="hl-keyword">public</span> String getSex() {
+        <span class="hl-keyword">return</span> sex;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setSex(String sex) {
+        <span class="hl-keyword">this</span>.sex = sex;
+    }
+}</pre><p>
+        This bean contains exactly the same properties as the wrapper you defined earlier. You will later use this class
+        to store the user information in the session.
+      </p><p>
+        The bean additionally will be used to make the data available in the XSL view (by automatically serializing it to XML). 
+      </p><p>
+        Add the bean to the Spring configuration <code class="filename">src/main/webapp/WEB-INF/spring.xml</code> to make it available
+        as session-scoped bean:
+      </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hl-tag">&lt;beans</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"http://www.springframework.org/schema/beans"</span><span class="hl-tag">&gt;</span>
+
+  ...
+
+  <span class="hl-tag">&lt;bean</span> <span class="hl-attribute">id</span>=<span class="hl-value">"user"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.User"</span> <span class="hl-attribute">scope</span>=<span class="hl-value">"session"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;aop:scoped-proxy/&gt;</span>
+  <span class="hl-tag">&lt;/bean&gt;</span>
+
+<span class="hl-tag">&lt;/beans&gt;</span></pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="wrapper-handler.business-logic.handler"></a>2.6.3.&nbsp;Implementing a handler</h3></div></div></div><p>
+        A handler is responsible to execute the actual business logic of your application. A handler can be any class
+        but is has some requirements that have to be met:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>It has to implement the <code class="literal">org.pustefixframework.web.mvc.InputHandler</code> interface 
+                (replacement for the old non-generic, but still supported, <code class="literal">de.schlund.pfixcore.generator.IHandler</code> interface).</p></li><li class="listitem"><p>As handlers are used as flyweights, they <span class="emphasis"><em>must not</em></span> have any static non-final properties.</p></li></ol></div><p>
+        If you use your IDE to generate a new <code class="literal">EnterUserDataHandler</code> class that implements the
+        <code class="literal">InputHandler</code> interface, you get the following code:
+      </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp.handler;
+
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper;
+<span class="hl-keyword">import</span> org.pustefixframework.web.mvc.InputHandler;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> EnterUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;EnterUserDataWrapper&gt; {
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> handleSubmittedData(EnterUserDataWrapper wrapper) {
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> isActive() {
+        <span class="hl-keyword">return</span> false;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> needsData() {
+        <span class="hl-keyword">return</span> false;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> prerequisitesMet() {
+        <span class="hl-keyword">return</span> false;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> retrieveCurrentStatus(EnterUserDataWrapper wrapper) {
+    }
+}</pre><p>
+        If you now (re-)start your application and open the page again, you still get an error, that the page is still not accessible. This is because of the
+        return values of the generated methods and how Pustefix processes a request.
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            When a page is requested, Pustefix calls the <code class="function">prerequisitesMet</code> method of all
+            handlers that are configured for this page. If any of these methods return <code class="literal">false</code>,
+            the page will not be displayed.
+          </p></li><li class="listitem"><p>
+            If all of these methods return <code class="literal">true</code>, Pustefix will call the <code class="function">isActive</code> method
+            on all handlers of the page. If none of the methods return <code class="literal">true</code>, the page will not be displayed.
+          </p></li></ul></div><p>
+        When your IDE generated the method bodies, both methods return <code class="literal">false</code> und thus the page
+        cannot be displayed.
+        Modify the return values of <code class="function">prerequisitesMet</code> and <code class="function">isActive</code> to
+        make the page accessible
+      </p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> EnterUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;EnterUserDataWrapper&gt; {
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> isActive() {
+        <span class="hl-keyword">return</span> true;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> prerequisitesMet() {
+        <span class="hl-keyword">return</span> true;
+    }
+}</pre><p>
+        If you now restart the application and open the page again, all form fields will be displayed. To test your form, fill out at least the mandatory fields:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>gender</p><p>name</p><p>email</p></li></ul></div><p>
+        If you submit the data, the wrapper will validate your data and then display the page again. At this point,
+        the form elements will still contain the values that you entered. Pustefix saved their state automatically. 
+      </p><p>
+        If you click on the <code class="literal">XML</code> button in the upper right corner of the page, you will see the
+        XML document that contains the data of the rendered page:
+      </p><pre class="programlisting"><span class="hl-tag">&lt;formresult</span> <span class="hl-attribute">serial</span>=<span class="hl-value">"1470048746036"</span> <span class="hl-attribute">trigger</span>=<span class="hl-value">"submit"</span><span class="hl-tag">&gt;</span>
+   <span class="hl-tag">&lt;formvalues&gt;</span>
+      <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.email"</span><span class="hl-tag">&gt;</span>myemail<span class="hl-tag">&lt;/param&gt;</span>
+      <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.name"</span><span class="hl-tag">&gt;</span>myname<span class="hl-tag">&lt;/param&gt;</span>
+      <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.sex"</span><span class="hl-tag">&gt;</span>m<span class="hl-tag">&lt;/param&gt;</span>
+   <span class="hl-tag">&lt;/formvalues&gt;</span>
+   <span class="hl-tag">&lt;formerrors /&gt;</span>
+   <span class="hl-tag">&lt;formhiddenvals /&gt;</span>
+   <span class="hl-tag">&lt;wrapperstatus&gt;</span>
+      <span class="hl-tag">&lt;wrapper</span> <span class="hl-attribute">active</span>=<span class="hl-value">"true"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper"</span> <span class="hl-attribute">prefix</span>=<span class="hl-value">"user"</span><span class="hl-tag"> /&gt;</span>
+   <span class="hl-tag">&lt;/wrapperstatus&gt;</span>
+<span class="hl-tag">&lt;/formresult&gt;</span></pre><p>
+        The <code class="literal">&lt;formvalues/&gt;</code> node contains a <code class="literal">&lt;param/&gt;</code> element for each
+        of the form fields that you submitted. Inside the <code class="literal">&lt;wrapperstatus/&gt;</code> node, you can see a list
+        of all wrappers that are registered for this page.
+      </p><p>
+        As the handler mostly consists of auto-generated code, it does not execute any business logic. If you want
+        to execute Java code after the page is submitted, you only need to place it in the <code class="function">handleSubmittedData</code>
+        method
+      </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp.handler;
+
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.User;
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper;
+<span class="hl-keyword">import</span> org.pustefixframework.web.mvc.InputHandler;
+<span class="hl-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> EnterUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;EnterUserDataWrapper&gt; {
+
+    <em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+    User user;
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> handleSubmittedData(EnterUserDataWrapper wrapper) {
+        user.setSex(wrapper.getSex());
+        user.setName(wrapper.getName());
+        user.setEmail(wrapper.getEmail());
+        user.setHomepage(wrapper.getHomepage());
+        user.setBirthday(wrapper.getBirthday());
+        user.setAdmin(wrapper.getAdmin());
+    }
+}</pre><p>
+        You already configured a session-scoped Spring bean for storing the user data. You can inject the bean
+        into the handler using the Spring autowiring mechanism.
+      </p><p>
+        Pustefix will fill the previously generated wrapper object with the submitted data and after having successfully checked and
+        casted the data, it will pass it to the <code class="literal">handleSubmittedData</code> method, where you can
+        take the data and put in the <code class="literal">User</code> bean.
+      </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.pageflow"></a>2.7.&nbsp;Implementing the workflow</h2></div></div></div><p>
+      Now you have implemented the business logic, that stores your <code class="classname">User</code> data in the session,
+      but still, the <code class="literal">EnterData</code> page is displayed, after you submitted the page. The desired behaviour is to display
+      the <code class="literal">ReviewData</code> after the business logic has successfully been executed.
+    </p><p>
+      To achieve this, you have to create a new workflow and specify the steps in this workflow. This is done via the <code class="literal">&lt;pageflow/&gt;</code> tag
+      in the configuration file:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;context-xml-service-config&gt;</span>
+
+  <em class="hl-comment" style="color: silver">&lt;!-- configuration start --&gt;</em>
+
+  <span class="hl-tag">&lt;pageflow</span> <span class="hl-attribute">name</span>=<span class="hl-value">"RegisterUser"</span> <span class="hl-attribute">final</span>=<span class="hl-value">"Confirm"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;flowstep</span> <span class="hl-attribute">name</span>=<span class="hl-value">"EnterData"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;flowstep</span> <span class="hl-attribute">name</span>=<span class="hl-value">"ReviewData"</span> <span class="hl-attribute">stophere</span>=<span class="hl-value">"true"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;/pageflow&gt;</span>
+
+  <em class="hl-comment" style="color: silver">&lt;!-- pagerequest configuration --&gt;</em>  
+
+<span class="hl-tag">&lt;/context-xml-service-config&gt;</span></pre><p>
+      The workflow starts with the <code class="literal">EnterData</code> page, which is followed by the <code class="literal">ReviewData</code> page. After the page flow
+      is finished, the final page <code class="literal">Confirm</code> will be displayed. Open the <code class="literal">EnterData</code> page again, after you made the changes,
+      fill out the mandatory fields and submit them: the page flow will lead you to the <code class="literal">ReviewData</code> page, as you specified in the configuration.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.errors"></a>2.8.&nbsp;Displaying errors</h2></div></div></div><p>
+      Up to now, you expected, that the users of your application do not make any mistakes. We all know, that this is not the case for
+      real-life users. To test, how the application reacts, if you do not fill out all required fields, open the <code class="literal">EnterData</code>
+      page again, leave the <code class="literal">name</code> field empty and submit the page.
+    </p><p>
+      As you can see, Pustefix is clever enough not to continue the page flow. If you would debug the application, you would see, that Pustefix
+      even does not execute the <code class="function">handleSubmittedData</code> method of your handler. This is because the generated wrapper class does
+      some basic validation on the input data. As you specified the <code class="literal">name</code> parameter as <code class="literal">mandatory</code>, the data
+      is not valid and the wrapper is not passed to the handler.
+    </p><p>
+      But how is the user supposed to know, why the page flow is not processed, there is no error message. But this is not completely true. Pustefix
+      sends you an error message, but your page does not display it. If you open the DOM-tree view again, you will see a difference in the XML document
+      that is used for the page rendering: 
+    </p><pre class="programlisting"><span class="hl-tag">&lt;formresult</span> <span class="hl-attribute">serial</span>=<span class="hl-value">"1214248690859"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;formvalues&gt;</span>
+          <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.email"</span><span class="hl-tag">&gt;</span>schst@bar.de<span class="hl-tag">&lt;/param&gt;</span>
+          <span class="hl-tag">&lt;param</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.sex"</span><span class="hl-tag">&gt;</span>m<span class="hl-tag">&lt;/param&gt;</span>
+      <span class="hl-tag">&lt;/formvalues&gt;</span>
+      <span class="hl-tag">&lt;formerrors&gt;</span>
+          <span class="hl-tag">&lt;error</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.name"</span><span class="hl-tag">&gt;</span>
+              <span class="hl-tag">&lt;pfx:include</span> <span class="hl-attribute">href</span>=<span class="hl-value">"core-override/dyntxt/statusmessages-core-merged.xml"</span> <span class="hl-attribute">part</span>=<span class="hl-value">"MISSING_PARAM"</span><span class="hl-tag">/&gt;</span>
+          <span class="hl-tag">&lt;/error&gt;</span>
+      <span class="hl-tag">&lt;/formerrors&gt;</span>
+      <span class="hl-tag">&lt;formhiddenvals/&gt;</span>
+      <span class="hl-tag">&lt;wrapperstatus&gt;</span>
+          <span class="hl-tag">&lt;wrapper</span> <span class="hl-attribute">active</span>=<span class="hl-value">"true"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper"</span> <span class="hl-attribute">prefix</span>=<span class="hl-value">"user"</span><span class="hl-tag">/&gt;</span>
+      <span class="hl-tag">&lt;/wrapperstatus&gt;</span>
+      <span class="hl-tag">&lt;pageflow</span> <span class="hl-attribute">name</span>=<span class="hl-value">"RegisterUser"</span><span class="hl-tag">&gt;</span>
+          <span class="hl-tag">&lt;step</span> <span class="hl-attribute">current</span>=<span class="hl-value">"true"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"EnterData"</span><span class="hl-tag">/&gt;</span>
+          <span class="hl-tag">&lt;step</span> <span class="hl-attribute">name</span>=<span class="hl-value">"ReviewData"</span><span class="hl-tag">/&gt;</span>
+      <span class="hl-tag">&lt;/pageflow&gt;</span>
+  <span class="hl-tag">&lt;/formresult&gt;</span></pre><p>
+      Inside the <code class="literal">&lt;formerrors/&gt;</code> node, there is an <code class="literal">&lt;error/&gt;</code> element which signals an
+      error for the field <code class="literal">user.name</code>. The content of the error is an include to the part <code class="literal">MISSING_PARAM</code>
+      in the file <code class="filename">core-override/dyntxt/statusmessages-core-merged.xml</code>. This file contains all error messages
+      provided by the core. If you open the file and search for this part, you will find something ike this XML:
+    </p><pre class="programlisting"><span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"MISSING_PARAM"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>This parameter is mandatory.<span class="hl-tag">&lt;/theme&gt;</span>
+<span class="hl-tag">&lt;/part&gt;</span></pre><p>
+      As you can see, Pustefix informs you, that an error happened, and even provides you with a human readable message for the error. All
+      that is left for you to do, is display it to the user. This can be done using the <code class="literal">&lt;pfx:checkfield/&gt;</code>, <code class="literal">&lt;pfx:error/&gt;</code>
+      and <code class="literal">&lt;pfx:scode/&gt;</code> tags provided by Pustefix.
+    </p><p>
+      To add the error message, open the page content file <code class="filename">txt/pages/EnterData.xml</code>. The <code class="literal">&lt;pfx:checkfield/&gt;</code> tag
+      is used to check, whether an error happened for a specific field or not. Inside this tag, you can place a <code class="literal">&lt;pfx:error/&gt;</code> tag. The
+      content of this tag will only be displayed, if an error occurred for this field. The <code class="literal">&lt;pfx:scode/&gt;</code> tag is an easy way
+      to fetch the error message from the <code class="filename">core-override/dyntxt/statusmessages-core-merged.xml</code> file.
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span>
+               <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+
+      <span class="hl-tag">&lt;h1&gt;</span>Register new user<span class="hl-tag">&lt;/h1&gt;</span>
+
+      <span class="hl-tag">&lt;pfx:forminput&gt;</span>
+
+        <em class="hl-comment" style="color: silver">&lt;!-- Other form fields --&gt;</em>
+
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;label&gt;</span>Name:<span class="hl-tag">&lt;/label&gt;</span>
+          <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.name"</span><span class="hl-tag">/&gt;</span>
+          <span class="hl-tag">&lt;pfx:checkfield</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.name"</span><span class="hl-tag">&gt;</span>
+            <span class="hl-tag">&lt;pfx:error&gt;</span><span class="hl-tag">&lt;span</span> <span class="hl-attribute">class</span>=<span class="hl-value">"{$pfx_class}"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;pfx:scode/&gt;</span><span class="hl-tag">&lt;/span&gt;</span><span class="hl-tag">&lt;/pfx:error&gt;</span>
+          <span class="hl-tag">&lt;/pfx:checkfield&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+
+        <em class="hl-comment" style="color: silver">&lt;!-- Other form fields --&gt;</em>
+
+        <span class="hl-tag">&lt;pfx:xinp</span> <span class="hl-attribute">type</span>=<span class="hl-value">"submit"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"Register"</span><span class="hl-tag">/&gt;</span>
+
+      <span class="hl-tag">&lt;/pfx:forminput&gt;</span>
+
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+ <span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      If you now try to submit the page again without entering your name, Pustefix will display the correct error message.
+      Of course, you have to repeat this step for all other input fields on your page.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.domtree"></a>2.9.&nbsp;Displaying the entered data</h2></div></div></div><p>
+      Now that your application is displaying errors correctly, you should go back to implement the main requirements. The next feature
+      that you will be implementing is the review page, where the user will be able to review has data. To achieve this, you will have
+      to write the user data to the DOM tree, that is used to render the page.
+    </p><p>
+      You can either let Pustefix automatically serialize your Spring bean to XML, or you can do it by yourself by creating/adding
+      according XML nodes programmatically.
+    </p><p>
+      Automatic serialization can be done using Pustefix's own XML serialization mechanism or the JAXB standard. Doing it programmatically,
+      you have to add a method to your bean, annotate it with <code class="literal">InsertStatus</code> and implement it using the DOM API.
+    </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp;
+
+<span class="hl-keyword">import</span> org.w3c.dom.Element;
+<span class="hl-keyword">import</span> de.schlund.pfixcore.beans.InsertStatus;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> User {
+
+    <em><span class="hl-annotation" style="color: gray">@InsertStatus</span></em>
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> toXML(Element element) {
+        <span class="hl-keyword">if</span>(name != null) {
+            element.setAttribute(<span class="hl-string">"name"</span>, name);
+        }
+        <span class="hl-keyword">if</span>(email != null) {
+            element.setAttribute(<span class="hl-string">"email"</span>, email);
+        }
+        <span class="hl-keyword">if</span>(birthday != null) {
+            element.setAttribute(<span class="hl-string">"birthday"</span>, birthday);
+        }
+        <span class="hl-keyword">if</span>(homepage != null) {
+            element.setAttribute(<span class="hl-string">"homepage"</span>, homepage);
+        }
+        <span class="hl-keyword">if</span>(sex != null) {
+            element.setAttribute(<span class="hl-string">"sex"</span>, sex);
+        }
+        element.setAttribute(<span class="hl-string">"admin"</span>, String.valueOf(admin));
+    }
+
+}</pre><p>
+      In this example you can omit this method, because in the absence of an annotated method Pustefix uses its own default mechanism, which
+      will result in the creation of exactly the same XML nodes here.
+    </p><p>
+      You just have to tell Pustefix, on which pages, the bean should be rendered. Again, this is done in the onfiguration file <code class="filename">app.xml</code>. 
+      This time, you will have to add an <code class="literal">&lt;output/&gt;</code> tag to the page and nest <code class="literal">&lt;resource/&gt;</code> tags for each
+      bean, that should be rendered on this page.
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;context-xml-service-config&gt;</span>
+
+  <em class="hl-comment" style="color: silver">&lt;!-- other configuration options --&gt;</em>
+  
+  <span class="hl-tag">&lt;pagerequest</span> <span class="hl-attribute">name</span>=<span class="hl-value">"ReviewData"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;output&gt;</span>
+      <span class="hl-tag">&lt;resource</span> <span class="hl-attribute">node</span>=<span class="hl-value">"user"</span> <span class="hl-attribute">bean-ref</span>=<span class="hl-value">"user"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;/output&gt;</span>
+  <span class="hl-tag">&lt;/pagerequest&gt;</span>
+
+<span class="hl-tag">&lt;/context-xml-service-config&gt;</span></pre><p>
+      The <code class="literal">bean-ref</code> attribute references the name of the <code class="literal">User</code> bean, which you already have configured 
+      in the Spring configuration file <code class="literal">spring.xml</code>.
+    </p><p>
+      Open the XML view for the page, after you made the changes and reloaded the page and you will see, that the user data has been inserted
+      into the XML:
+    </p><pre class="programlisting"><span class="hl-tag">&lt;formresult</span> <span class="hl-attribute">serial</span>=<span class="hl-value">"1470123298547"</span> <span class="hl-attribute">trigger</span>=<span class="hl-value">"flow"</span><span class="hl-tag">&gt;</span>
+   <span class="hl-tag">&lt;formvalues /&gt;</span>
+   <span class="hl-tag">&lt;formerrors /&gt;</span>
+   <span class="hl-tag">&lt;formhiddenvals /&gt;</span>
+   <span class="hl-tag">&lt;user</span> <span class="hl-attribute">admin</span>=<span class="hl-value">"false"</span> <span class="hl-attribute">email</span>=<span class="hl-value">"myemail"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"myname"</span> <span class="hl-attribute">sex</span>=<span class="hl-value">"m"</span><span class="hl-tag"> /&gt;</span>
+   <span class="hl-tag">&lt;pageflow</span> <span class="hl-attribute">final</span>=<span class="hl-value">"Confirm"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"RegisterUser"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;step</span> <span class="hl-attribute">name</span>=<span class="hl-value">"EnterData"</span><span class="hl-tag"> /&gt;</span>
+      <span class="hl-tag">&lt;step</span> <span class="hl-attribute">current</span>=<span class="hl-value">"true"</span> <span class="hl-attribute">name</span>=<span class="hl-value">"ReviewData"</span><span class="hl-tag"> /&gt;</span>
+   <span class="hl-tag">&lt;/pageflow&gt;</span>
+<span class="hl-tag">&lt;/formresult&gt;</span>
+</pre><p>
+      Pustefix allows you to use XSL and XPath in your page definitions to insert this information in the rendered page. Use the <code class="literal">ixsl</code>
+      namespace to access nodes from the DOM tree:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span>
+               <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;h1&gt;</span>Review your data<span class="hl-tag">&lt;/h1&gt;</span>
+      <span class="hl-tag">&lt;div</span> <span class="hl-attribute">class</span>=<span class="hl-value">"table"</span><span class="hl-tag">&gt;</span>
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>Gender:<span class="hl-tag">&lt;/div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>
+            <span class="hl-tag">&lt;ixsl:choose&gt;</span>
+              <span class="hl-tag">&lt;ixsl:when</span> <span class="hl-attribute">test</span>=<span class="hl-value">"/formresult/user/gender/text() = 'f'"</span><span class="hl-tag">&gt;</span>female<span class="hl-tag">&lt;/ixsl:when&gt;</span>
+              <span class="hl-tag">&lt;ixsl:otherwise&gt;</span>male<span class="hl-tag">&lt;/ixsl:otherwise&gt;</span>
+            <span class="hl-tag">&lt;/ixsl:choose&gt;</span>
+          <span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>Name:<span class="hl-tag">&lt;/div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span><span class="hl-tag">&lt;ixsl:value-of</span> <span class="hl-attribute">select</span>=<span class="hl-value">"/formresult/user/@name"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>Email:<span class="hl-tag">&lt;/div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span><span class="hl-tag">&lt;ixsl:value-of</span> <span class="hl-attribute">select</span>=<span class="hl-value">"/formresult/user/@email"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>Homepage:<span class="hl-tag">&lt;/div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span><span class="hl-tag">&lt;ixsl:value-of</span> <span class="hl-attribute">select</span>=<span class="hl-value">"/formresult/user/@homepage"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>Birthday:<span class="hl-tag">&lt;/div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span><span class="hl-tag">&lt;ixsl:value-of</span> <span class="hl-attribute">select</span>=<span class="hl-value">"/formresult/user/@birthday"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span>Administrator:<span class="hl-tag">&lt;/div&gt;</span>
+          <span class="hl-tag">&lt;div&gt;</span><span class="hl-tag">&lt;ixsl:value-of</span> <span class="hl-attribute">select</span>=<span class="hl-value">"/formresult/user/@admin"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/div&gt;</span>
+        <span class="hl-tag">&lt;/div&gt;</span>
+      <span class="hl-tag">&lt;/div&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+ <span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+     If you now open the page again, enter your data and submit the form, Pustefix will display a new page, which contains
+     the information you entered.
+   </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.save"></a>2.10.&nbsp;Saving the data</h2></div></div></div><p>
+      Your application now handles the input of user data and displays it again to the user. To complete the last requirement, your application
+      will have to provide another button on the <code class="literal">ReviewData</code> page, which lets the user confirm the data and then executes
+      the business logic to store the data in your persistence layer. 
+    </p><p>
+      To achieve this, you will have to implement a new pair of wrapper and handler. As the <code class="literal">ReviewData</code> page does not
+      contain any input fields, the new wrapper does not need any parameters:
+    </p><pre class="programlisting"><span class="hl-tag">&lt;interface</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"http://www.pustefix-framework.org/2008/namespace/iwrapper"</span>
+      <span class="hl-attribute">xmlns:xsi</span>=<span class="hl-value">"http://www.w3.org/2001/XMLSchema-instance"</span>
+      <span class="hl-attribute">xsi:schemaLocation</span>=<span class="hl-value">"http://www.pustefix-framework.org/2008/namespace/iwrapper 
+                          http://www.pustefix-framework.org/2008/namespace/iwrapper.xsd"</span><span class="hl-tag">&gt;</span>
+  
+  <em class="hl-comment" style="color: silver">&lt;!-- This handler will process the data --&gt;</em>
+  <span class="hl-tag">&lt;ihandler</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.handler.SaveUserDataHandler"</span><span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/interface&gt;</span></pre><p>
+      After you implemented the wrapper, continue by creating a new <code class="classname">SaveUserData</code> class, which implements the
+      <code class="classname">IHandler</code> interface. Make sure that the handler is active by returning <code class="literal">true</code> from the
+      <code class="function">prerequisitesMet</code> and <code class="function">isActive</code> methods. Place the business logic that saves the new user
+      in the <code class="function">handleSubmittedData</code> method. In this example, the business logic has been replaced by a simple
+      <code class="function">System.out.println</code> call.
+    </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp.handler;
+
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.wrapper.SaveUserDataWrapper;
+<span class="hl-keyword">import</span> org.pustefixframework.web.mvc.InputHandler;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> SaveUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;SaveUserDataWrapper&gt; {
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> handleSubmittedData(SaveUserDataWrapper wrapper) {
+        System.out.println(<span class="hl-string">"Business logic to save data"</span>);
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> isActive() {
+        <span class="hl-keyword">return</span> true;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> needsData() {
+        <span class="hl-keyword">return</span> false;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> prerequisitesMet() {
+        <span class="hl-keyword">return</span> true;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> retrieveCurrentStatus(SaveUserDataWrapper wrapper) {
+        <em class="hl-comment" style="color: silver">// Nothing to be done here</em>
+    }
+
+}</pre><p>
+      As the handler should be triggered from the <code class="literal">ReviewData</code> page, you have to add the handler to the
+      <code class="literal">&lt;pagerequest/&gt;</code> tag in the configuration:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;context-xml-service-config&gt;</span>
+  
+  <span class="hl-tag">&lt;pagerequest</span> <span class="hl-attribute">name</span>=<span class="hl-value">"ReviewData"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;input&gt;</span>
+      <span class="hl-tag">&lt;wrapper</span> <span class="hl-attribute">prefix</span>=<span class="hl-value">"user"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.pustefixframework.tutorial.firstapp.wrapper.SaveUserDataWrapper"</span><span class="hl-tag"> /&gt;</span>
+    <span class="hl-tag">&lt;/input&gt;</span>
+    <span class="hl-tag">&lt;output&gt;</span>
+      <span class="hl-tag">&lt;resource</span> <span class="hl-attribute">node</span>=<span class="hl-value">"user"</span> <span class="hl-attribute">bean-ref</span>=<span class="hl-value">"user"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;/output&gt;</span>
+  <span class="hl-tag">&lt;/pagerequest&gt;</span>
+
+<span class="hl-tag">&lt;/context-xml-service-config&gt;</span></pre><p>
+      All that is left your you now, is to add a possibility to submit the <code class="literal">ReviewData</code> page. But as there is no
+      input form needed, you will learn a new way, how data can be submitted using Pustefix. The <code class="literal">&lt;pfx:button/&gt;</code>
+      tag is used, to create links between different Pustefix pages. But it can also be used to link to the same page again and
+      pass any arguments using the <code class="literal">&lt;pfx:argument/&gt;</code>. If you use the <code class="literal">&lt;pfx:argument/&gt;</code>
+      tag, Pustefix will treat the request as if the page had been submitted and call the <code class="function">handleSubmittedData</code> method
+      on all handlers on the page.
+    </p><p>
+      As your handler does not accept any parameters, you can pass any argument as you like, for example setting the argument
+      <code class="literal">user.save</code> to <code class="literal">true</code>.
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span> <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;h1&gt;</span>Review your data<span class="hl-tag">&lt;/h1&gt;</span>
+      <em class="hl-comment" style="color: silver">&lt;!-- Display user data --&gt;</em>
+      <span class="hl-tag">&lt;pfx:button&gt;</span>
+        <span class="hl-tag">&lt;pfx:argument</span> <span class="hl-attribute">name</span>=<span class="hl-value">"user.save"</span><span class="hl-tag">&gt;</span>true<span class="hl-tag">&lt;/pfx:argument&gt;</span>
+        Go ahead and save the data
+      <span class="hl-tag">&lt;/pfx:button&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+ <span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      If you click on this link, the page will be submitted and if you placed the business logic inside the handler, it will
+      be executed.
+    </p><p>
+      Open the <code class="filename">txt/pages/Confirm.xml</code> file and add some HTML, that will be displayed after the Pustefix
+      workflow will continue to the last page.
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span> <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;h1&gt;</span>Congratulations<span class="hl-tag">&lt;/h1&gt;</span>
+      <span class="hl-tag">&lt;p&gt;</span>Your data has been saved<span class="hl-tag">&lt;/p&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+ <span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      Now you have implemented all specified requirements and finished your first Pustefix application.
+    </p><p>
+      In the last part of the tutorial you will polish some of the rough edges of your applications, which you did not deal with
+      while implementing the application.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.tweaks"></a>2.11.&nbsp;The finishing touch</h2></div></div></div><p>
+      Although your application is already working, there are some minor problems that you should deal with.
+    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="wrapper-handler.tweaks.retrieve"></a>2.11.1.&nbsp;Changing data</h3></div></div></div><p>
+        In a typical application, the review page does not only display the entered data, but offer you a link to go back and modify
+        the data you entered before. Your application currently lacks this feature, but you will now learn how this is implemented in
+        Pustefix.
+      </p><p>
+        At first, you have to add a new link to the <code class="filename">ReviewData.xml</code> page, which sends the user back to the
+        <code class="literal">EnterData</code> page. This can be done using the <code class="literal">&lt;pfx:button/&gt;</code> tag: 
+      </p><pre class="programlisting"><span class="hl-tag">&lt;pfx:button</span> <span class="hl-attribute">page</span>=<span class="hl-value">"EnterData"</span><span class="hl-tag">&gt;</span>Go back and edit data<span class="hl-tag">&lt;/pfx:button&gt;</span></pre><p>
+        If you click on this link, the <code class="literal">EnterData</code> page will be loaded and the form will be displayed again.
+        But the application does not behave exactly as you would like it to, as the form fields are empty and not filled with
+        the data that the user entered before. This can be easily changed.
+      </p><p>
+        Every time a page is rendered, Pustefix will call the <code class="function">retrieveCurrentStatus</code> method of all handlers that
+        are registered for the page and pass the matching wrapper for the handler. In this method
+        you may use the generated setter methods of the wrapper class to assign values to the form fields.
+      </p><p>
+        To prefill the form fields with the values the user entered before, you need to get the <code class="classname">User</code> bean
+        and transfer its values to the according wrapper fields. This is almost the opposite of what you
+        implemented in the <code class="function">handleSubmittedData</code> method:
+      </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp.handler;
+
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.User;
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.wrapper.EnterUserDataWrapper;
+<span class="hl-keyword">import</span> org.pustefixframework.web.mvc.InputHandler;
+<span class="hl-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> EnterUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;EnterUserDataWrapper&gt; {
+
+    <em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+    User user;
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> retrieveCurrentStatus(EnterUserDataWrapper wrapper) {
+        wrapper.setSex(user.getSex());
+        wrapper.setName(user.getName());
+        wrapper.setEmail(user.getEmail());
+        wrapper.setHomepage(user.getHomepage());
+        wrapper.setBirthday(user.getBirthday());
+        wrapper.setAdmin(user.getAdmin());
+    }
+
+}</pre><p>
+        If you restart the application, enter some data and then go back to the form, you can see, that the form fields contain the
+        values that you wanted them to contain and that you entered before.
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="wrapper-handler.tweaks.needsdata"></a>2.11.2.&nbsp;Avoiding unwanted access</h3></div></div></div><p>
+        Another problem ist, that your pages are not protected against unwanted access. If you open the URL
+        <code class="uri">http://localhost:8080/ReviewData</code>, Pustefix will display this page,
+        although there is not data to review.
+      </p><p>
+        It is the responsibility of the application developer to make sure, that the page can only be
+        displayed, if it makes sense in the application context. However, Pustefix provides an easy
+        way to disable the availability of a page. The method <code class="function">prerequisitesMet</code> will be called on
+        every handler, every time a page should be displayed. If this method returns <code class="literal">false</code>, the page
+        will not be displayed.
+      </p><p>
+        To protect the <code class="literal">ReviewData</code> page, you have to modify the <code class="function">prerequisitesMet</code> method
+        of the <code class="classname">SaveUserDataHandler</code> handler. As the page should only be accessible, if a user has
+        been entered, you only need to check the <code class="literal">User</code> bean:
+        if no user name has been set, the method must return <code class="literal">false</code>, otherwise it must return <code class="literal">true</code>.
+      </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.firstapp.handler;
+
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.User;
+<span class="hl-keyword">import</span> org.pustefixframework.tutorial.firstapp.wrapper.SaveUserDataWrapper;
+<span class="hl-keyword">import</span> org.pustefixframework.web.mvc.InputHandler;
+<span class="hl-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> SaveUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;SaveUserDataWrapper&gt; {
+
+    <em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+    User user;
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> prerequisitesMet() {
+        <span class="hl-keyword">return</span> user.getName() != null;
+    }
+
+}</pre><p>
+        If you now open the <code class="uri">http://localhost:8080/ReviewData</code>, the page cannot be displayed.
+        Now the workflow mechanism kicks in and selects the next page, that should be displayed. This is the <code class="literal">Confirm</code>
+        page, which has been defined as the final page of the workflow.
+      </p><p> 
+        It would have been better, if the <code class="literal">EnterData</code> page would have been displayed instead of the <code class="literal">Confirm</code>,
+        page, as the user must enter data before any other page can be displayed. This can easily be achieved using Pustefix.
+      </p><p>
+        Each handler has a <code class="function">needsData</code> method, which will be called, when the workflow mechanism selects the next
+        page to display. The workflow will start with the first page in the current workflow and if the <code class="function">needsData</code>
+        method returns <code class="literal">true</code>, it will stop at this page until the handler is satisfied.
+      </p><p>
+        To make sure, that the user will stay on this page, you only need to implement the <code class="function">needsData</code> method of the
+        <code class="classname">EnterUserDataHandler</code> handler: the method must return <code class="literal">true</code>, unless the user name
+        has been set.
+      </p><pre class="programlisting"><span class="hl-keyword">public</span> <span class="hl-keyword">class</span> EnterUserDataHandler <span class="hl-keyword">implements</span> InputHandler&lt;EnterUserDataWrapper&gt; {
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> needsData() {
+        <span class="hl-keyword">return</span> user.getName() == null;
+    }
+
+}
+</pre><p>
+        if you now try to access the <code class="literal">ReviewData</code> page directly, Pustefix will redirect you to the 
+        <code class="literal">EnterData</code> page instead until you entered the data of a new user.
+      </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wrapper-handler.conclusion"></a>2.12.&nbsp;Conclusion</h2></div></div></div><p>
+      In this tutorial you learned the basics about the core features of Pustefix and developed a very simple, but typical, web
+      application. For details about the features that you got to know in this tutorial, take a look at the comprehensive reference
+      documentation, which describes all the configuration options, XML tags and interfaces in detail.
+    </p><p></p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ajax-calculator"></a>Chapter&nbsp;3.&nbsp;AJAX Calculator tutorial</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="section"><a href="#ajax-calculator.setup">3.1. Setup</a></span></dt><dt><span class="section"><a href="#ajax-calculator.businesslogic">3.2. Implementing the business logic</a></span></dt><dt><span class="section"><a href="#ajax-calculator.expose">3.3. Exposing the service</a></span></dt><dt><span class="section"><a href="#ajax-calculator.consume">3.4. Consuming the service</a></span></dt><dt><span class="section"><a href="#ajax-calculator.conclusion">3.5. Conclusion</a></span></dt></dl></div><p>
+    In this tutorial you will learn how to create an AJAX application with Pustefix. As an example, you will build a very simple
+    calculator, which does the real calculation in Java on the server. As in the other tutorials, the business logic has been kept
+    extremely simple to focus on the tasks that are required to implement an AJAX application with the Pustefix framework.
+  </p><p>
+    No matter how complex your business logic is, the tasks required to set up an AJAX application will be almost the same as in
+    this tutorial.
+  </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ajax-calculator.setup"></a>3.1.&nbsp;Setup</h2></div></div></div><p>
+      To build this tutorial, create a new project <code class="literal">calculator</code> as described in
+      <a class="xref" href="#wrapper-handler.setup" title="2.1.&nbsp;Setting up a new project">Section&nbsp;2.1, &#8220;Setting up a new project&#8221;</a>. But this time, use the Maven archetype <code class="literal">pustefix-archetype-application</code> with the following data:
+    </p><div class="informaltable"><table><thead><tr>
+          <th>Property</th>
+          <th>Value</th>
+        </tr></thead><tbody><tr>
+          <td>groupId</td>
+          <td>org.pustefixframework.tutorial</td>
+        </tr><tr>
+          <td>artifactId</td>
+          <td>calculator</td>
+        </tr><tr>
+          <td>version</td>
+          <td>default</td>
+        </tr><tr>
+          <td>package</td>
+          <td>org.pustefixframework.tutorial.calculator</td>
+        </tr><tr>
+          <td>pustefixVersion</td>
+          <td>the latest version</td>
+        </tr></tbody></table></div><p>
+      This Maven archetype will create an application which is already set up for AJAX applications, i.e.
+      it contains the required Maven dependencies and configuration.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ajax-calculator.businesslogic"></a>3.2.&nbsp;Implementing the business logic</h2></div></div></div><p>
+      In Pustefix, a web service always has to consist of a service interface and an implementation.
+      In this tutorial, you will implement a very simple webservice which provides three methods to
+      execute mathematical operations.
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Add two integer numbers</p></li><li class="listitem"><p>Subtract two integer numbers</p></li><li class="listitem"><p>Multiply two integer numbers</p></li></ul></div><p>
+      The interface for this business logic is very easy to implement:
+    </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.calculator;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> CalculatorService {
+    <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> add(<span class="hl-keyword">int</span> a, <span class="hl-keyword">int</span> b);
+    <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> subtract(<span class="hl-keyword">int</span> a, <span class="hl-keyword">int</span> b);
+    <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> multiply(<span class="hl-keyword">int</span> a, <span class="hl-keyword">int</span> b);
+}</pre><p>
+      The implementation for this interface is not any harder to implement than the interface iteself:
+    </p><pre class="programlisting"><span class="hl-keyword">package</span> org.pustefixframework.tutorial.calculator;
+
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> CalculatorServiceImpl <span class="hl-keyword">implements</span> CalculatorService {
+    <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> add(<span class="hl-keyword">int</span> a, <span class="hl-keyword">int</span> b) {
+        <span class="hl-keyword">return</span> a+b;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> subtract(<span class="hl-keyword">int</span> a, <span class="hl-keyword">int</span> b) {
+        <span class="hl-keyword">return</span> a-b;
+    }
+
+    <span class="hl-keyword">public</span> <span class="hl-keyword">int</span> multiply(<span class="hl-keyword">int</span> a, <span class="hl-keyword">int</span> b) {
+        <span class="hl-keyword">return</span> a*b;
+    }
+}</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ajax-calculator.expose"></a>3.3.&nbsp;Exposing the service</h2></div></div></div><p>
+      Now that you have defined the interface for your service and also provided an implementation for it, the next
+      step is to expose this service and make it available to the frontend.
+    </p><p>
+      This is done by adding a Spring bean definition for the service implementation and export this bean as a webservice.
+      Your Spring configuration file <code class="filename">src/main/webapp/WEB-INF/spring.xml</code> should look like this:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hl-tag">&lt;beans</span> <span class="hl-attribute">xmlns</span>=<span class="hl-value">"http://www.springframework.org/schema/beans"</span>
+       <span class="hl-attribute">xmlns:xsi</span>=<span class="hl-value">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="hl-attribute">xmlns:aop</span>=<span class="hl-value">"http://www.springframework.org/schema/aop"</span>
+       <span class="hl-attribute">xmlns:context</span>=<span class="hl-value">"http://www.springframework.org/schema/context"</span>
+       <span class="hl-attribute">xmlns:ws</span>=<span class="hl-value">"http://pustefixframework.org/schema/webservices"</span>
+       <span class="hl-attribute">xsi:schemaLocation</span>=<span class="hl-value">"http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://pustefixframework.org/schema/webservices
+                           http://pustefixframework.org/schema/webservices/pustefix-webservices.xsd"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;context:annotation-config/&gt;</span>
+
+  <span class="hl-tag">&lt;bean</span> <span class="hl-attribute">id</span>=<span class="hl-value">"calculator"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.pustefixframework.tutorial.calculator.CalculatorServiceImpl"</span><span class="hl-tag">/&gt;</span>
+
+  <span class="hl-tag">&lt;ws:webservice</span> 
+    <span class="hl-attribute">id</span>=<span class="hl-value">"CalculatorService"</span> 
+    <span class="hl-attribute">servicename</span>=<span class="hl-value">"CalculatorService"</span> 
+    <span class="hl-attribute">interface</span>=<span class="hl-value">"org.pustefixframework.tutorial.calculator.CalculatorService"</span> 
+    <span class="hl-attribute">ref</span>=<span class="hl-value">"calculator"</span><span class="hl-tag"> 
+  /&gt;</span>
+
+<span class="hl-tag">&lt;/beans&gt;</span></pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ajax-calculator.consume"></a>3.4.&nbsp;Consuming the service</h2></div></div></div><p>
+      With these steps, you have finished all Java and configuration work packages and can continue implementing the client
+      side of your application. Open the <code class="filename">Home.xml</code> file and add some HTML as a frontend for
+      your calculator application (we just use the default page of the generated application):
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;h1&gt;</span>AJAX Calculator Tutorial<span class="hl-tag">&lt;/h1&gt;</span>
+      <span class="hl-tag">&lt;fieldset&gt;</span>
+        <span class="hl-tag">&lt;legend&gt;</span>Calculator<span class="hl-tag">&lt;/legend&gt;</span>
+        A: <span class="hl-tag">&lt;input</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">id</span>=<span class="hl-value">"a"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;br/&gt;</span>
+        B: <span class="hl-tag">&lt;input</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text"</span> <span class="hl-attribute">id</span>=<span class="hl-value">"b"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;br/&gt;</span>
+        <span class="hl-tag">&lt;input</span> <span class="hl-attribute">type</span>=<span class="hl-value">"button"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"add"</span> <span class="hl-attribute">onClick</span>=<span class="hl-value">"add();"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;input</span> <span class="hl-attribute">type</span>=<span class="hl-value">"button"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"subtract"</span> <span class="hl-attribute">onClick</span>=<span class="hl-value">"subtract();"</span><span class="hl-tag">/&gt;</span>
+        <span class="hl-tag">&lt;input</span> <span class="hl-attribute">type</span>=<span class="hl-value">"button"</span> <span class="hl-attribute">value</span>=<span class="hl-value">"multiply"</span> <span class="hl-attribute">onClick</span>=<span class="hl-value">"multiply();"</span><span class="hl-tag">/&gt;</span>
+      <span class="hl-tag">&lt;/fieldset&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+
+<span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      The HTML page contains several controls:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Two text input fields (with ids <code class="literal">a</code> and <code class="literal">b</code>), in which the user enters the two values, that are used for the calculation.</p></li><li class="listitem"><p>A button labeled <code class="literal">add</code> which will call the JavaScript function <code class="function">add()</code> when clicked.</p></li><li class="listitem"><p>A button labeled <code class="literal">subtract</code> which will call the JavaScript function <code class="function">subtract()</code> when clicked.</p></li><li class="listitem"><p>A button labeled <code class="literal">multiply</code> which will call the JavaScript function <code class="function">multiply()</code> when clicked.</p></li></ul></div><p>
+      To implement an AJAX application, you will have to use JavaScript. This has been left out in the last example of your page.
+      We will add it in a separate part named <code class="literal">head</code>, which will be automatically included in the head section
+      of the page (this is done in the <code class="literal">frame.xml</code> previously created by the archetype - just to separate the HTML 
+      from all your JavaScript includes and make the pages more maintainable).
+    </p><p>
+      Pustefix does not only provide server side implementation helpers for your AJAX applications, but also some client side JavaScript
+      classes which hide all transportation details from you. Pustefix will also generate JavaScript stub classes for the Java services
+      you have exported. Therefor you have to include the following files:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="filename">httpRequest.js</code> provides an abstraction over the different <code class="literal">XmlHttpRequest</code> implementations in the different browsers.</p></li><li class="listitem"><p><code class="filename">webservice_json.js</code> provides an abstraction of the <code class="literal">JSONWS</code> protocol used by Pustefix.</p></li><li class="listitem"><p>
+          The JavaScript stub for your calculator service is not available as a file, but is generated on demand.
+          To include this generated JavaScript code, Pustefix provides the <code class="literal">&lt;pfxwsscript/&gt;</code> tag, which takes the name of the
+          service (as specified in the <code class="literal">&lt;webservice/&gt;</code> tag in your web service configuration) in the <code class="literal">name</code>
+          attribute. This tag will generate the <code class="literal">&lt;script/&gt;</code> tag that requests the generated JavaScript code from
+          the server. 
+        </p></li></ul></div><p>
+      The following listing shows the according <code class="literal">head</code> part, you should add to your <code class="filename">Home.xml</code> file:
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+  
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"content"</span><span class="hl-tag">&gt;</span>
+    <em class="hl-comment" style="color: silver">&lt;!-- content, including part "javascript-includes", see above --&gt;</em>
+  <span class="hl-tag">&lt;/part&gt;</span>
+  
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"head"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"{$__contextpath}/modules/pustefix-core/script/httpRequest.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+      <span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"{$__contextpath}/modules/pustefix-webservices-jsonws/script/webservice_json.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+      <span class="hl-tag">&lt;pfx:wsscript</span> <span class="hl-attribute">name</span>=<span class="hl-value">"CalculatorService"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+
+<span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      If you are taking a look at the generated JavaScript code, you will see, that this code defines a new class called
+      <code class="classname">WS_CalculatorService</code>, which provides three methods:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="function">add()</code></p></li><li class="listitem"><p><code class="function">subtract()</code></p></li><li class="listitem"><p><code class="function">divide()</code></p></li></ul></div><p>
+      These are exactly the same methods that the <code class="classname">CalculatorService</code> interface declared in your Java code.
+    </p><pre class="programlisting">//Autogenerated webservice stub (don't modify this code manually!)
+function WS_CalculatorService(context) {
+  pfx.ws.json.BaseStub.call(this,"CalculatorService",context);
+}
+WS_CalculatorService.prototype=new pfx.ws.json.BaseStub;
+WS_CalculatorService.prototype.subtract=function() {
+  return this.callMethod("subtract",arguments,2);
+}
+WS_CalculatorService.prototype.multiply=function() {
+  return this.callMethod("multiply",arguments,2);
+}
+WS_CalculatorService.prototype.add=function() {
+  return this.callMethod("add",arguments,2);
+}
+</pre><p>
+      This class acts as a <span class="emphasis"><em>remote proxy</em></span> for the Java business logic you implemented earlier. If you call
+      any of these methods, the calculation will not be done on the client, but the request will be sent to the server, where
+      it will be processed by the Java implementation. The response will then be sent back to the client and is available
+      in your JavaScript application.
+    </p><p>
+      So all that is left to do, is implement the client side logic, that will create the proxy object and delegate the
+      calculation to it. You can just add the Javascript to the already existing <code class="literal">head</code> part of your page.
+    </p><p>
+      You are using the <code class="literal">&lt;pfx:script/&gt;</code> tag, which is used to insert inline JavaScript
+      into your page. In this script, you create a new instance of <code class="classname">WS_Calculator</code> and assign it to
+      a global JavaScript variable.
+    </p><p>
+      Furthermore, you implement the three missing functions <code class="function">add()</code>, <code class="function">subtract()</code> and
+      <code class="function">multiply()</code>, which are called, if the corresponding buttons are clicked. All three methods are implemented
+      the same way: The values of the two input fields are read and the corresponding method of the proxy object is called with
+      these values. The return value of the proxy method is displayed to the user, using the <code class="function">alert()</code> function.
+    </p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hl-tag">&lt;include_parts</span> <span class="hl-attribute">xmlns:ixsl</span>=<span class="hl-value">"http://www.w3.org/1999/XSL/Transform"</span> <span class="hl-attribute">xmlns:pfx</span>=<span class="hl-value">"http://www.schlund.de/pustefix/core"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"head"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+      <span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"{$__contextpath}/modules/pustefix-core/script/httpRequest.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+      <span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"{$__contextpath}/modules/pustefix-webservices-jsonws/script/webservice_json.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+      <span class="hl-tag">&lt;pfx:wsscript</span> <span class="hl-attribute">name</span>=<span class="hl-value">"CalculatorService"</span><span class="hl-tag">/&gt;</span>
+      
+      <span class="hl-tag">&lt;pfx:script&gt;</span>
+        var calcProxy = new WS_CalculatorService();
+        function add() {
+          var a = parseInt(document.getElementById('a').value);
+          var b = parseInt(document.getElementById('b').value);
+          alert(calcProxy.add(parseInt(a),parseInt(b)));
+        }
+        function subtract() {
+          var a = parseInt(document.getElementById('a').value);
+          var b = parseInt(document.getElementById('b').value);
+          alert(calcProxy.subtract(parseInt(a),parseInt(b)));
+        }
+        function multiply() {
+          var a = parseInt(document.getElementById('a').value);
+          var b = parseInt(document.getElementById('b').value);
+          alert(calcProxy.multiply(parseInt(a),parseInt(b)));
+        }
+      <span class="hl-tag">&lt;/pfx:script&gt;</span>
+    <span class="hl-tag">&lt;/theme&gt;</span>
+  <span class="hl-tag">&lt;/part&gt;</span>
+<span class="hl-tag">&lt;/include_parts&gt;</span></pre><p>
+      Now you can open the page, enter any two integer numbers and click on any button. Your application will send the request to
+      your business logic on the server and display the result on the client without reloading the page.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ajax-calculator.conclusion"></a>3.5.&nbsp;Conclusion</h2></div></div></div><p>
+      This tutorial showed you, how to implement an AJAX application based on Pustefix in several minutes. While this example only used
+      a very simple business logic and transferred only primitive type, AJAX applications in Pustefix are not restricted to built-in
+      Java types. Pustefix is able to send any Java-bean style objects from the client to the server and vice-versa. You only need to
+      make sure, that there is an empty constructor in your beans.
+    </p></div></div></div></body></html>

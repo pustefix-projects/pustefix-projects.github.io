@@ -16,6 +16,9 @@ navi: 2
         tag library, including all you have to know from beginner to expert level.
       </p>
       <div>
+        <a href="/documentation/0.21.x/reference.html">Pustefix Reference Documentation - Version 0.21.x</a>
+      </div>
+      <div>
         <a href="/documentation/0.20.x/reference.html">Pustefix Reference Documentation - Version 0.20.x</a>
       </div>
       <div>
@@ -29,6 +32,9 @@ navi: 2
         The Pustefix Tutorials are a good starting point to get familiar with Pustefix. They let you create
         and run some basic applications within minutes.
       </p>
+      <div>
+        <a href="/documentation/0.21.x/tutorial.html">Pustefix Tutorial - Version 0.21.x</a>
+      </div>
       <div>
         <a href="/documentation/0.20.x/tutorial.html">Pustefix Tutorial - Version 0.20.x</a>
       </div>
