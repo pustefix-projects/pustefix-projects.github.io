@@ -1,0 +1,178 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Pustefix Frequently Asked Questions</title><link rel="stylesheet" type="text/css" href="css/style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book"><div class="titlepage"><div><div><h1 class="title"><a name="faq"></a>Pustefix Frequently Asked Questions</h1></div><div><p class="copyright">Copyright &copy; 2007, 2008 1&amp;1 Internet AG</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="chapter"><a href="#installation">1. Installation</a></span></dt><dt><span class="chapter"><a href="#configuration">2. Configuration</a></span></dt><dt><span class="chapter"><a href="#xmlandxsl">3. XML and XSL</a></span></dt><dt><span class="chapter"><a href="#pageflows">4. Pageflows</a></span></dt><dt><span class="chapter"><a href="#states">5. States</a></span></dt><dt><span class="chapter"><a href="#handler">6. Handler and wrapper</a></span></dt><dt><span class="chapter"><a href="#ajax">7. AJAX</a></span></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="installation"></a>Chapter&nbsp;1.&nbsp;Installation</h1></div></div></div><div class="qandaset"><a name="d0e15"></a><dl><dt>1.1. <a href="#installation.dns">
+          I don't have access to DNS and I don't want to mess up my hosts file. Is there any other way to access a pustefix application?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="installation.dns"></a><a name="d0e17"></a><p><b>1.1.</b></p></td><td align="left" valign="top"><p>
+          I don't have access to DNS and I don't want to mess up my hosts file. Is there any other way to access a pustefix application?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Yes but only if you have one application deployed on that server and you are just using tomcat, without apache.
+          Pustefix uses a virtual host for every application deployed. However you can use the <code class="literal">&lt;serveralias/&gt;</code>
+          option from the <code class="filename">project.xml.in</code> file. Let's say that the ip of the server is <code class="literal">111.222.333.444</code>.
+          You can use something like <code class="literal">&lt;serveralias&gt;111.222.333.444&lt;/serveralias&gt;</code> then redeploy the application.
+        </p><p>
+          Now you can access your favourite pustefix application via <code class="uri">http://111.222.333.444:8080/xml/config</code>.
+        </p></td></tr></tbody></table></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="configuration"></a>Chapter&nbsp;2.&nbsp;Configuration</h1></div></div></div><div class="qandaset"><a name="d0e43"></a><dl><dt>2.1. <a href="#configuration.props">
+          I need some custom java properties for my application. Where should I put them?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="configuration.props"></a><a name="d0e45"></a><p><b>2.1.</b></p></td><td align="left" valign="top"><p>
+          I need some custom java properties for my application. Where should I put them?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          You can add those in the <code class="literal">&lt;properties/&gt;</code> section of your servlet configuration file.
+          For example at the end of your <code class="filename">app.conf.xml</code> you can have something like:
+        </p><pre class="programlisting"><span class="hl-tag">&lt;properties&gt;</span>
+  <span class="hl-tag">&lt;prop</span> <span class="hl-attribute">name</span>=<span class="hl-value">"jdbc_conn_string"</span><span class="hl-tag">&gt;</span>jdbc:mysql://foo/bar<span class="hl-tag">&lt;/prop&gt;</span>
+<span class="hl-tag">&lt;/properties&gt;</span></pre></td></tr></tbody></table></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="xmlandxsl"></a>Chapter&nbsp;3.&nbsp;XML and XSL</h1></div></div></div><div class="qandaset"><a name="d0e62"></a><dl><dt>3.1. <a href="#xmlandxsl.image">
+          Why doesn't &lt;pfx:image/&gt; find my images?
+        </a></dt><dt>3.2. <a href="#xmlandxsl.domtree">
+          Can I see the runtime XML that is used in some particular page?
+        </a></dt><dt>3.3. <a href="#xmlandxsl.cache">
+          Can I see the generated xsl files?
+        </a></dt><dt>3.4. <a href="#xmlandxsl.submit">
+          Why does my submit button do nothing?
+        </a></dt><dt>3.5. <a href="#xmlandxsl.i18n">
+          How is i18n achieved in a pustefix application?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="xmlandxsl.image"></a><a name="d0e64"></a><p><b>3.1.</b></p></td><td align="left" valign="top"><p>
+          Why doesn't &lt;pfx:image/&gt; find my images?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          If your project is named <code class="literal">foo</code> and your images are in <code class="filename">foo/img</code> then, in
+          <code class="filename">project.xml.in</code> you should have something like <code class="literal">&lt;passthrough&gt;foo/img&lt;/passthrough&gt;</code>.
+          This is for Apache to generate the necessary alias lines so the requests are mapped correctly.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="xmlandxsl.domtree"></a><a name="d0e83"></a><p><b>3.2.</b></p></td><td align="left" valign="top"><p>
+          Can I see the runtime XML that is used in some particular page?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Yes. While in development phase, you can use the <code class="literal">&lt;pfx:editconsole/&gt;</code> tag anywhere in your page.
+          It will display a link which opens the editor and a link which shows the raw runtime XML used to generate the page.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="xmlandxsl.cache"></a><a name="d0e93"></a><p><b>3.3.</b></p></td><td align="left" valign="top"><p>
+          Can I see the generated xsl files?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Yes, they can be found in the <code class="filename">projects/.cache</code> directory.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="xmlandxsl.submit"></a><a name="d0e103"></a><p><b>3.4.</b></p></td><td align="left" valign="top"><p>
+          Why does my submit button do nothing?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Check if you have a <code class="literal">&lt;pfx:forminput&gt;</code> around it on the page.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="xmlandxsl.i18n"></a><a name="d0e113"></a><p><b>3.5.</b></p></td><td align="left" valign="top"><p>
+          How is i18n achieved in a pustefix application?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          You can achieve i18n by using something like
+        </p><pre class="programlisting"><span class="hl-tag">&lt;part</span> <span class="hl-attribute">name</span>=<span class="hl-value">"username"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;theme</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;lang</span> <span class="hl-attribute">name</span>=<span class="hl-value">"default"</span><span class="hl-tag">&gt;</span>some text<span class="hl-tag">&lt;/lang&gt;</span>
+    <span class="hl-tag">&lt;lang</span> <span class="hl-attribute">name</span>=<span class="hl-value">"de_DE"</span><span class="hl-tag">&gt;</span>etwas text<span class="hl-tag">&lt;/lang&gt;</span>
+  <span class="hl-tag">&lt;/theme&gt;</span>
+<span class="hl-tag">&lt;/part&gt;</span></pre><p>
+         and when you include this part in your page, the correct language will be selected at runtime by pustefix. To change the
+         language, you can use the request parameter <code class="literal">__language</code>. For example requesting your page with
+         <code class="literal">__language=de</code> will display the text under <code class="literal">&lt;lang name="de"&gt;</code>. You can also change
+         the language programatically using the <code class="function">setLanguage()</code> method from the <code class="classname">Context</code>.
+        </p></td></tr></tbody></table></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="pageflows"></a>Chapter&nbsp;4.&nbsp;Pageflows</h1></div></div></div><div class="qandaset"><a name="d0e141"></a><dl><dt>4.1. <a href="#pageflows.final">
+          The page that is specified as final must be declared as a flowstep in the pageflow that uses it?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="pageflows.final"></a><a name="d0e143"></a><p><b>4.1.</b></p></td><td align="left" valign="top"><p>
+          The page that is specified as final must be declared as a flowstep in the pageflow that uses it?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          No, you can declare any arbitrary page as final, it doesn't have to be in the same pageflow
+          where it is used.
+        </p></td></tr></tbody></table></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="states"></a>Chapter&nbsp;5.&nbsp;States</h1></div></div></div><div class="qandaset"><a name="d0e152"></a><dl><dt>5.1. <a href="#states.document">
+          When I implement the getDocument() method of a State descending from StaticState, what is the difference between new Document() and super.getDocument(context, preq)?
+        </a></dt><dt>5.2. <a href="#states.impl">
+          What is the difference between StaticState and StateImpl?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="states.document"></a><a name="d0e154"></a><p><b>5.1.</b></p></td><td align="left" valign="top"><p>
+          When I implement the getDocument() method of a State descending from StaticState, what is the difference between new Document() and super.getDocument(context, preq)?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          If you use a new document, the pageflow will usually continue without displaying the page while if you use
+          <code class="function">super.getDocument</code>, the pageflow will stop on this page and on all the
+          <code class="classname">ContextResources</code> that are declared in this pagerequest will be called <code class="function">insertStatus()</code>.
+        </p><p>
+          Basically, when using a new document, descending from <code class="classname">StaticState</code> doesn't really make sense, as you don't
+          use anything interesting from this class - descending from <code class="classname">StateImpl</code> directly would be just as good.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="states.impl"></a><a name="d0e178"></a><p><b>5.2.</b></p></td><td align="left" valign="top"><p>
+          What is the difference between StaticState and StateImpl?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          <code class="classname">StateImpl</code> is abstract and does not implement the <code class="function">getDocument()</code> method.
+          <code class="classname">StaticState</code> implements the <code class="function">getDocument()</code> method, calls
+          <code class="function">insertStatus</code> of all the <code class="classname">ContextResources</code> defined for this pagerequest and
+          stops the pageflow.
+        </p></td></tr></tbody></table></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="handler"></a>Chapter&nbsp;6.&nbsp;Handler and wrapper</h1></div></div></div><div class="qandaset"><a name="d0e205"></a><dl><dt>6.1. <a href="#handler.prerequisites">
+          What is the prerequisitesMet(...) method used for and when is it called?
+        </a></dt><dt>6.2. <a href="#handler.iwrp.extend">
+          Can I reuse my existing iwrp interfaces?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="handler.prerequisites"></a><a name="d0e207"></a><p><b>6.1.</b></p></td><td align="left" valign="top"><p>
+          What is the prerequisitesMet(...) method used for and when is it called?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          The <code class="function">prerequisitesMet()</code> method from the <code class="classname">IHandler</code> interface is
+          used by pustefix to determine which HTML links should be active or not. This method is called once per
+          each request, on all IHandlers, from all pageflows. Thus, this method should be very fast or else the whole
+          system would be slowed down.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="handler.iwrp.extend"></a><a name="d0e220"></a><p><b>6.2.</b></p></td><td align="left" valign="top"><p>
+          Can I reuse my existing iwrp interfaces?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Yes, you can extend an interface and add some more parameters to it or override older definitions, instead of writing
+          a new one from scratch. You can also assign a new handler. Use the <code class="literal">extends</code> attribute of the
+          <code class="literal">&lt;interface/&gt;</code> tag.
+        </p></td></tr></tbody></table></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ajax"></a>Chapter&nbsp;7.&nbsp;AJAX</h1></div></div></div><div class="qandaset"><a name="d0e235"></a><dl><dt>7.1. <a href="#ajax.soaptojson">
+          How do I switch my webservice from the SOAP to the JSON protocol?
+        </a></dt><dt>7.2. <a href="#ajax.async">
+          How to make a asynchronous webservice call?
+        </a></dt><dt>7.3. <a href="#ajax.requestid">
+          For what is requestID parameter in async-callback functions?
+        </a></dt><dt>7.4. <a href="#ajax.sessiontypes">
+          What are the different session types for in webservices.conf.xml?
+        </a></dt><dt>7.5. <a href="#ajax.context">
+          How do I get access to the Context or Context Resources inside a webservice implementation?
+        </a></dt><dt>7.6. <a href="#ajax.libs">
+          Which libraries have to be added?
+        </a></dt><dt>7.7. <a href="#ajax.multistubs">
+          How to load multiple generated JSON stubs in a single file, within a single request?
+        </a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="ajax.soaptojson"></a><a name="d0e237"></a><p><b>7.1.</b></p></td><td align="left" valign="top"><p>
+          How do I switch my webservice from the SOAP to the JSON protocol?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          You just have to exchange some Javascript libraries. The stub implementations are compatible, so you don't have to
+          modify your Javascript code.
+        </p><p>
+          Replace the SOAP libraries
+        </p><pre class="programlisting"><span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"/core/script/xmlRequest.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+<span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"/core/script/webservice.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+<span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"/xml/wsscript/MyService.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span></pre><p>
+          by the according JSON libraries (the build-time generated stub is replaced by its dynamic counterpart using the
+          <code class="literal">pfx:wsscript</code> tag)
+        </p><pre class="programlisting"><span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"/core/script/httpRequest.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+<span class="hl-tag">&lt;script</span> <span class="hl-attribute">type</span>=<span class="hl-value">"text/javascript"</span> <span class="hl-attribute">src</span>=<span class="hl-value">"/core/script/webservice_json.js"</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;/script&gt;</span>
+<span class="hl-tag">&lt;pfx:wsscript</span> <span class="hl-attribute">name</span>=<span class="hl-value">"MyService"</span><span class="hl-tag">/&gt;</span></pre></td></tr><tr class="question"><td align="left" valign="top"><a name="ajax.async"></a><a name="d0e255"></a><p><b>7.2.</b></p></td><td align="left" valign="top"><p>
+          How to make a asynchronous webservice call?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Simply add, as an additional parameter, a function reference to the call of the appropriate webservice-object's method call:
+        </p><pre class="programlisting">webserviceObject.getRemoteSearchResult(queryString, callbackFunction);</pre><p>
+          Or create the webservice with an object reference as argument (whose methods will be called back automatically):
+        </p><pre class="programlisting">var search={
+   getRemoteSearchResult: function(result,requestid,exception) {
+      ...
+   }
+}
+var service=new WS_SearchService(search);
+service.getRemoteSearchResult(queryString);</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="ajax.requestid"></a><a name="d0e268"></a><p><b>7.3.</b></p></td><td align="left" valign="top"><p>
+          For what is requestID parameter in async-callback functions?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          While synchronous calls are blocking and only can be made sequentially, asynchronous calls can be made simultaneously
+          and they can return in undetermined order. Using a requestID the application can control or manage the order of the
+          returning calls.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="ajax.sessiontypes"></a><a name="d0e275"></a><p><b>7.4.</b></p></td><td align="left" valign="top"><p>
+          What are the different session types for in webservices.conf.xml?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          The session type <code class="literal">servlet</code> indicates that the service request needs a valid Pustefix/HTTP session
+          (webservices which need to access ContextResources have to be of this type). Type <code class="literal">none</code> indicates that the service
+          needs no session.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="ajax.context"></a><a name="d0e288"></a><p><b>7.5.</b></p></td><td align="left" valign="top"><p>
+          How do I get access to the Context or Context Resources inside a webservice implementation?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          A webservice gets access to the <code class="classname">Context</code> or <code class="classname">ContextResources</code> by deriving from
+          <code class="classname">de.schlund.pfixcore.webservice.AbstractService</code> and thus inheriting its access methods
+          <code class="function">getContext()</code> and <code class="function">getContextResource()</code>.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="ajax.libs"></a><a name="d0e310"></a><p><b>7.6.</b></p></td><td align="left" valign="top"><p>
+          Which libraries have to be added?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          None. All necessary libraries come bundled with Pustefix.
+        </p></td></tr><tr class="question"><td align="left" valign="top"><a name="ajax.multistubs"></a><a name="d0e317"></a><p><b>7.7.</b></p></td><td align="left" valign="top"><p>
+          How to load multiple generated JSON stubs in a single file, within a single request?
+        </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
+          Using <code class="literal">pfx:wsscript</code> you can request multiple stubs by specifying the servicenames as a whitespace-separated list.
+        </p><pre class="programlisting"><span class="hl-tag">&lt;pfx:wsscript</span> <span class="hl-attribute">name</span>=<span class="hl-value">"service1 service2 service3"</span><span class="hl-tag">/&gt;</span></pre><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Warning: Be careful with the SOAP client"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/warning.png"></td><th align="left">Be careful with the SOAP client</th></tr><tr><td align="left" valign="top"><p>
+            Never include the SOAP implementation code twice on a page! leads to strange "serializer not found exception"
+          </p></td></tr></table></div></td></tr></tbody></table></div></div></div></body></html>
