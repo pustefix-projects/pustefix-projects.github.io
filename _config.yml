@@ -19,7 +19,7 @@ paginate: 5
 paginate_path: "/blog/page:num/"
 
 keywords: pustefix, framework, java, xml, xslt, spring, mvc
-pustefix_version: 0.22.0
+pustefix_version: 0.22.1
 
 # Build settings
 markdown: kramdown
